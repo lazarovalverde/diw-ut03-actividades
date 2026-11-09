@@ -1,0 +1,610 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>UT03 · Prácticas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700&display=swap">
+
+<style>
+/* ─── TOKENS
+   Layout: cabecera + grid de tarjetas de práctica
+   Paleta: azul pizarra oscuro + ámbar (coherente con toda la UT03)
+─────────────────────────────────────────────────── */
+:root {
+  --bg:         #f7f8fa;
+  --bg-card:    #ffffff;
+  --fg:         #1a1d2e;
+  --fg-soft:    #5a6070;
+  --fg-muted:   #9099aa;
+  --accent:     #e09a1a;
+  --accent-bg:  #fdf3dc;
+  --accent-fg:  #7a4f00;
+  --border:     #e2e5ec;
+
+  /* estado de las prácticas */
+  --estado-disponible:    #d6f5e8;
+  --estado-disponible-fg: #0d5c38;
+  --estado-pronto:        #e2e5ec;
+  --estado-pronto-fg:     #5a6070;
+  --estado-consolidacion: #d6e8ff;
+  --estado-consolidacion-fg: #1a4a8a;
+  --estado-libre:         #e8d6ff;
+  --estado-libre-fg:      #4a1a8a;
+  --estado-eval:          #fce8d6;
+  --estado-eval-fg:       #7a3010;
+
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:         #131620;
+    --bg-card:    #1c1f2e;
+    --fg:         #e8ebf4;
+    --fg-soft:    #9099aa;
+    --fg-muted:   #5a6070;
+    --accent:     #f0ab28;
+    --accent-bg:  #2a2000;
+    --accent-fg:  #f0ab28;
+    --border:     #2a2d3e;
+    --estado-disponible:    #0a2e1e;
+    --estado-disponible-fg: #5de0a0;
+    --estado-pronto:        #2a2d3e;
+    --estado-pronto-fg:     #9099aa;
+    --estado-consolidacion: #0d2a50;
+    --estado-consolidacion-fg: #7ab8ff;
+    --estado-libre:         #2a1050;
+    --estado-libre-fg:      #c8a0ff;
+    --estado-eval:          #2e1500;
+    --estado-eval-fg:       #f0a06a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:         #131620;
+  --bg-card:    #1c1f2e;
+  --fg:         #e8ebf4;
+  --fg-soft:    #9099aa;
+  --fg-muted:   #5a6070;
+  --accent:     #f0ab28;
+  --accent-bg:  #2a2000;
+  --accent-fg:  #f0ab28;
+  --border:     #2a2d3e;
+  --estado-disponible:    #0a2e1e;
+  --estado-disponible-fg: #5de0a0;
+  --estado-pronto:        #2a2d3e;
+  --estado-pronto-fg:     #9099aa;
+  --estado-consolidacion: #0d2a50;
+  --estado-consolidacion-fg: #7ab8ff;
+  --estado-libre:         #2a1050;
+  --estado-libre-fg:      #c8a0ff;
+  --estado-eval:          #2e1500;
+  --estado-eval-fg:       #f0a06a;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0 max(16px, env(safe-area-inset-right,0px)) 72px;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+}
+.page { max-width: 980px; margin: 0 auto; }
+
+/* ─── CABECERA ────────────────────────────────────── */
+.page-header {
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.page-header .unidad-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.page-header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+.page-header .descripcion {
+  color: var(--fg-soft);
+  max-width: 580px;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* progreso */
+.progreso-wrap {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.progreso-label {
+  font-size: 13px;
+  color: var(--fg-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.progreso-barra {
+  flex: 1;
+  min-width: 120px;
+  max-width: 260px;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progreso-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  width: 12.5%; /* 2 de 16 disponibles */
+  transition: width .4s ease;
+}
+.progreso-txt {
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+/* ─── LEYENDA ─────────────────────────────────────── */
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+.leyenda-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-disponible    { background: var(--estado-disponible-fg); }
+.dot-pronto        { background: var(--fg-muted); }
+.dot-consolidacion { background: var(--estado-consolidacion-fg); }
+.dot-libre         { background: var(--estado-libre-fg); }
+.dot-eval          { background: var(--estado-eval-fg); }
+
+/* ─── BLOQUES TEMÁTICOS ───────────────────────────── */
+.bloque-titulo {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin: 36px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bloque-titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── GRID DE PRÁCTICAS ───────────────────────────── */
+.practicas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 14px;
+}
+
+/* ─── TARJETA DE PRÁCTICA ─────────────────────────── */
+.practica-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+.practica-card.disponible:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,.1);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.practica-card.no-disponible {
+  opacity: .6;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card-numero {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fg-muted);
+  letter-spacing: .06em;
+}
+.card-estado {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.estado-disponible    { background: var(--estado-disponible);    color: var(--estado-disponible-fg); }
+.estado-pronto        { background: var(--estado-pronto);        color: var(--estado-pronto-fg); }
+.estado-consolidacion { background: var(--estado-consolidacion); color: var(--estado-consolidacion-fg); }
+.estado-libre         { background: var(--estado-libre);         color: var(--estado-libre-fg); }
+.estado-eval          { background: var(--estado-eval);          color: var(--estado-eval-fg); }
+
+.card-titulo {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.3;
+  margin: 0;
+  text-wrap: balance;
+}
+.card-descripcion {
+  font-size: 13px;
+  color: var(--fg-soft);
+  margin: 0;
+  flex: 1;
+}
+.card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--accent-bg);
+  color: var(--accent-fg);
+}
+.card-sesion {
+  font-size: 12px;
+  color: var(--fg-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.card-arrow {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  font-size: 16px;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity .15s, transform .15s;
+}
+.practica-card.disponible:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* consolidación: fondo sutil diferente */
+.practica-card.consolidacion {
+  border-style: dashed;
+}
+
+/* ─── TARJETA C (consolidación grande) ───────────── */
+.card-grande {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+}
+.card-grande .card-grande-icono {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+.card-grande .card-cuerpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.card-grande .card-chips { margin-top: 0; }
+
+@media (max-width: 540px) {
+  .card-grande {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ─── PIE ─────────────────────────────────────────── */
+.page-footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.page-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.page-footer a:hover { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .practica-card { transition: none; }
+}
+</style>
+
+<div class="page">
+
+  <!-- CABECERA -->
+  <header class="page-header">
+    <div class="unidad-label">UT03 · 2.º DAW · IES Ribera de los Molinos</div>
+    <h1>Layout avanzado y diseño responsive</h1>
+    <p class="descripcion">Flexbox avanzado, Grid con áreas, <code>position</code>, media queries mobile-first, layouts intrínsecos y componentes difíciles responsive.</p>
+    <div class="progreso-wrap">
+      <span class="progreso-label">Progreso</span>
+      <div class="progreso-barra"><div class="progreso-fill" id="barraFill"></div></div>
+      <span class="progreso-txt" id="progresoTxt">2 / 16 prácticas disponibles</span>
+    </div>
+  </header>
+
+  <!-- LEYENDA -->
+  <div class="leyenda">
+    <div class="leyenda-item"><span class="leyenda-dot dot-disponible"></span> Disponible</div>
+    <div class="leyenda-item"><span class="leyenda-dot dot-consolidacion"></span> Consolidación</div>
+    <div class="leyenda-item"><span class="leyenda-dot dot-libre"></span> Libre</div>
+    <div class="leyenda-item"><span class="leyenda-dot dot-eval"></span> Evaluación</div>
+    <div class="leyenda-item"><span class="leyenda-dot dot-pronto"></span> Próximamente</div>
+  </div>
+
+  <!-- BLOQUE 1: FLEXBOX AVANZADO + POSITION -->
+  <div class="bloque-titulo">Flexbox avanzado · Position</div>
+  <div class="practicas-grid">
+
+    <!-- P1 -->
+    <a href="p1-card-responsive/index.html" class="practica-card disponible">
+      <div class="card-top">
+        <span class="card-numero">P1 · Sesión 1</span>
+        <span class="card-estado estado-disponible">Disponible</span>
+      </div>
+      <h2 class="card-titulo">HANA · Card de plato responsive</h2>
+      <p class="card-descripcion">Mobile-first. La card pasa de columna a fila con la imagen fija y el texto que crece.</p>
+      <div class="card-chips">
+        <span class="chip">flex-grow/shrink/basis</span>
+        <span class="chip">order</span>
+        <span class="chip">align-self</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <!-- P2 -->
+    <a href="p2-nav-responsive/index.html" class="practica-card disponible">
+      <div class="card-top">
+        <span class="card-numero">P2 · Sesión 2</span>
+        <span class="card-estado estado-disponible">Disponible</span>
+      </div>
+      <h2 class="card-titulo">HANA · Navegación responsive</h2>
+      <p class="card-descripcion">Nav fija con hamburger sin JS. Flex anidado en tres niveles, z-index y checkbox hack.</p>
+      <div class="card-chips">
+        <span class="chip">position: fixed</span>
+        <span class="chip">z-index</span>
+        <span class="chip">checkbox hack</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <!-- P3 -->
+    <div class="practica-card no-disponible">
+      <div class="card-top">
+        <span class="card-numero">P3 · Sesión 3</span>
+        <span class="card-estado estado-pronto">Próximamente</span>
+      </div>
+      <h2 class="card-titulo">HANA · Hero con superposición</h2>
+      <p class="card-descripcion">Badge con position:absolute, overlay con ::before, clamp() y object-fit.</p>
+      <div class="card-chips">
+        <span class="chip">position: absolute</span>
+        <span class="chip">position: sticky</span>
+        <span class="chip">clamp()</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOQUE 2: GRID AVANZADO -->
+  <div class="bloque-titulo">Grid avanzado</div>
+  <div class="practicas-grid">
+
+    <!-- P4 -->
+    <div class="practica-card no-disponible">
+      <div class="card-top">
+        <span class="card-numero">P4 · Sesión 4</span>
+        <span class="card-estado estado-pronto">Próximamente</span>
+      </div>
+      <h2 class="card-titulo">HANA · Sección del menú con áreas</h2>
+      <p class="card-descripcion">Layout asimétrico con grid-template-areas, grid implícito y colocación con líneas numéricas.</p>
+      <div class="card-chips">
+        <span class="chip">grid-template-areas</span>
+        <span class="chip">grid-auto-rows</span>
+        <span class="chip">auto-fit / auto-fill</span>
+      </div>
+    </div>
+
+    <!-- C1 -->
+    <div class="practica-card no-disponible card-grande consolidacion">
+      <div class="card-grande-icono">🔗</div>
+      <div class="card-cuerpo">
+        <div class="card-top">
+          <span class="card-numero">C1 · Consolidación P1–P4</span>
+          <span class="card-estado estado-consolidacion">Consolidación</span>
+        </div>
+        <h2 class="card-titulo">Landing page desde cero — HTML libre o con IA</h2>
+        <p class="card-descripcion">Mobile-first completo: nav con hamburger, hero con position:absolute, grid con áreas, flex anidado. El alumno construye o genera el HTML y escribe todo el CSS.</p>
+        <div class="card-chips">
+          <span class="chip">Flex + Grid</span>
+          <span class="chip">position</span>
+          <span class="chip">3 breakpoints</span>
+          <span class="chip">HTML propio</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOQUE 3: COMPONENTES DIFÍCILES -->
+  <div class="bloque-titulo">Componentes difíciles responsive</div>
+  <div class="practicas-grid">
+
+    <!-- P5 -->
+    <div class="practica-card no-disponible">
+      <div class="card-top">
+        <span class="card-numero">P5 · Sesión 6</span>
+        <span class="card-estado estado-pronto">Próximamente</span>
+      </div>
+      <h2 class="card-titulo">HANA · Formulario responsive</h2>
+      <p class="card-descripcion">Grid de 2 columnas, fieldset y legend, checkbox personalizado, select estilizado, botón adaptativo.</p>
+      <div class="card-chips">
+        <span class="chip">fieldset / legend</span>
+        <span class="chip">appearance: none</span>
+        <span class="chip">grid-column: 1/-1</span>
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="practica-card no-disponible">
+      <div class="card-top">
+        <span class="card-numero">P6 · Sesión 7</span>
+        <span class="card-estado estado-pronto">Próximamente</span>
+      </div>
+      <h2 class="card-titulo">HANA · Tabla y footer responsive</h2>
+      <p class="card-descripcion">Tabla con scroll horizontal y cabecera sticky. Tabla que colapsa a lista en móvil con data-label. Footer con layout intrínseco.</p>
+      <div class="card-chips">
+        <span class="chip">overflow-x: auto</span>
+        <span class="chip">data-label</span>
+        <span class="chip">auto-fit + minmax</span>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="practica-card no-disponible card-grande consolidacion">
+      <div class="card-grande-icono">🔗</div>
+      <div class="card-cuerpo">
+        <div class="card-top">
+          <span class="card-numero">C2 · Consolidación P5–P6</span>
+          <span class="card-estado estado-consolidacion">Consolidación</span>
+        </div>
+        <h2 class="card-titulo">Formulario y tabla responsive — CSS propio, HTML dado</h2>
+        <p class="card-descripcion">Se entrega el HTML con la estructura de fieldset y data-label lista. El alumno escribe todo el CSS responsive de formulario y tabla desde cero.</p>
+        <div class="card-chips">
+          <span class="chip">Formulario completo</span>
+          <span class="chip">Tabla colapso</span>
+          <span class="chip">CSS desde cero</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOQUE 4: INTEGRACIÓN -->
+  <div class="bloque-titulo">Integración total</div>
+  <div class="practicas-grid">
+
+    <!-- C3 -->
+    <div class="practica-card no-disponible card-grande">
+      <div class="card-grande-icono">🌐</div>
+      <div class="card-cuerpo">
+        <div class="card-top">
+          <span class="card-numero">C3 · Sesiones 9–10</span>
+          <span class="card-estado estado-libre">Libre</span>
+        </div>
+        <h2 class="card-titulo">Landing page completa — Proyecto libre</h2>
+        <p class="card-descripcion">El alumno elige el proyecto. HTML y CSS desde cero. Mobile-first, nav con hamburger, grid-template-areas, formulario con al menos un componente difícil, tabla responsive, diagrama ASCII del layout al inicio del CSS.</p>
+        <div class="card-chips">
+          <span class="chip">Proyecto propio</span>
+          <span class="chip">HTML + CSS total</span>
+          <span class="chip">Autoevaluación</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOQUE 5: EVALUACIÓN -->
+  <div class="bloque-titulo">Evaluación de comprensión</div>
+  <div class="practicas-grid">
+
+    <!-- P9 -->
+    <div class="practica-card no-disponible">
+      <div class="card-top">
+        <span class="card-numero">P9 · Sesión 11</span>
+        <span class="card-estado estado-eval">Evaluación</span>
+      </div>
+      <h2 class="card-titulo">Lectura de código responsive</h2>
+      <p class="card-descripcion">Sin ordenador. Leer CSS con Flex + Grid + media queries y dibujar cómo se ve en 3 vistas. Identificar errores.</p>
+      <div class="card-chips">
+        <span class="chip">Sin ordenador</span>
+        <span class="chip">3 vistas</span>
+        <span class="chip">Preparación examen</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PIE -->
+  <footer class="page-footer">
+    <span>DIW · 2.º DAW · IES Ribera de los Molinos</span>
+    <span>UT03 — Layout avanzado y diseño responsive</span>
+  </footer>
+
+</div>
+
+<script>
+  // Actualizar barra de progreso según cuántas prácticas estén disponibles
+  const disponibles = document.querySelectorAll('.practica-card.disponible').length;
+  const total = document.querySelectorAll('.practica-card').length;
+  const pct = Math.round((disponibles / total) * 100);
+  document.getElementById('barraFill').style.width = pct + '%';
+  document.getElementById('progresoTxt').textContent =
+    disponibles + ' / ' + total + ' prácticas disponibles';
+</script>
+
+</body></html>
