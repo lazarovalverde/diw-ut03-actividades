@@ -1,0 +1,1008 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UT03 · P4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700&display=swap">
+
+<style>
+:root {
+  --bg:         #f7f8fa;
+  --bg-card:    #ffffff;
+  --bg-code:    #1e2230;
+  --fg:         #1a1d2e;
+  --fg-soft:    #5a6070;
+  --fg-muted:   #9099aa;
+  --accent:     #e09a1a;
+  --accent-bg:  #fdf3dc;
+  --accent-fg:  #7a4f00;
+  --border:     #e2e5ec;
+  --green:      #1a7a4a;
+  --green-bg:   #d6f5e8;
+  --red:        #c0392b;
+  --red-bg:     #fde8e6;
+  --blue:       #1a4a8a;
+  --blue-bg:    #d6e8ff;
+  --tag-nuevo:  #e8d6ff;
+  --tag-nuevo-fg: #4a1a8a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131620; --bg-card: #1c1f2e; --bg-code: #0d0f18;
+    --fg: #e8ebf4; --fg-soft: #9099aa; --fg-muted: #5a6070;
+    --accent: #f0ab28; --accent-bg: #2a2000; --accent-fg: #f0ab28;
+    --border: #2a2d3e; --green: #5de0a0; --green-bg: #0a2e1e;
+    --red: #f07070; --red-bg: #2e1010; --blue: #7ab8ff; --blue-bg: #0d2a50;
+    --tag-nuevo: #2a1050; --tag-nuevo-fg: #c8a0ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131620; --bg-card: #1c1f2e; --bg-code: #0d0f18;
+  --fg: #e8ebf4; --fg-soft: #9099aa; --fg-muted: #5a6070;
+  --accent: #f0ab28; --accent-bg: #2a2000; --accent-fg: #f0ab28;
+  --border: #2a2d3e; --green: #5de0a0; --green-bg: #0a2e1e;
+  --red: #f07070; --red-bg: #2e1010; --blue: #7ab8ff; --blue-bg: #0d2a50;
+  --tag-nuevo: #2a1050; --tag-nuevo-fg: #c8a0ff;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0 max(16px, env(safe-area-inset-right,0px)) 80px;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+}
+.page-inner { max-width: 860px; margin: 0 auto; padding-top: 48px; }
+
+.practica-header {
+  display: flex; align-items: flex-start; gap: 20px;
+  margin-bottom: 36px; padding-bottom: 28px;
+  border-bottom: 2px solid var(--border);
+}
+.practica-numero {
+  font-family: 'Sora', sans-serif; font-size: 48px;
+  font-weight: 700; color: var(--accent); line-height: 1; flex-shrink: 0;
+}
+.practica-meta { flex: 1; min-width: 0; }
+.practica-meta .unit-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 4px;
+}
+.practica-meta h1 {
+  font-family: 'Sora', sans-serif; font-size: 26px;
+  font-weight: 700; margin: 0 0 8px; color: var(--fg); text-wrap: balance;
+}
+.practica-meta .subtitulo { font-size: 14px; color: var(--fg-soft); margin: 0; }
+
+.bloque { margin-bottom: 44px; }
+.bloque-titulo {
+  font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 700;
+  color: var(--fg); margin: 0 0 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.bloque-titulo .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; background: var(--accent); color: #fff;
+  border-radius: 50%; font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+p { margin: 0 0 14px; color: var(--fg-soft); }
+p:last-child { margin-bottom: 0; }
+strong { color: var(--fg); font-weight: 600; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.chip {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--blue-bg); color: var(--blue); font-weight: 500;
+}
+.chip.nuevo { background: var(--tag-nuevo); color: var(--tag-nuevo-fg); }
+
+/* ── PREVISUALIZACIONES canvas ── */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+.preview-wrap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.preview-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fg-muted); padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.preview-canvas { width: 100%; display: block; }
+
+/* ── BLOQUES DE CÓDIGO ── */
+.code-block {
+  background: var(--bg-code); border-radius: 10px;
+  overflow: hidden; margin: 14px 0;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.code-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: #7a8099; padding: 8px 16px 6px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  letter-spacing: .06em; display: flex; align-items: center; gap: 8px;
+}
+.code-label .file-tag {
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  padding: 1px 6px; font-size: 10px;
+}
+.code-block pre {
+  margin: 0; padding: 14px 16px 16px; overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  line-height: 1.6; color: #c8d0e8;
+}
+.k { color: #e07aff; } .v { color: #79d4a5; } .n { color: #7ab8ff; }
+.c { color: #5a6688; font-style: italic; } .s { color: #f0c070; }
+.hl { background: rgba(240,171,40,.15); display: block; margin: 0 -16px; padding: 0 16px; }
+
+code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  background: var(--accent-bg); color: var(--accent-fg);
+  padding: 1px 6px; border-radius: 4px;
+}
+.code-block code, .code-block pre code { background: none; color: inherit; padding: 0; }
+
+.callout {
+  border-radius: 8px; padding: 13px 16px; margin: 14px 0;
+  font-size: 14px; display: flex; gap: 10px; align-items: flex-start;
+}
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout-body { min-width: 0; }
+.callout-body strong { display: block; margin-bottom: 2px; }
+.callout.tip  { background: var(--green-bg); color: var(--green); }
+.callout.warn { background: var(--red-bg); color: var(--red); }
+.callout.info { background: var(--blue-bg); color: var(--blue); }
+
+.eval-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 16px 0; }
+.eval-table th {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--fg-muted);
+  font-weight: 500; text-align: left; padding: 6px 10px 6px 0;
+  border-bottom: 2px solid var(--border);
+}
+.eval-table td {
+  padding: 9px 10px 9px 0; border-bottom: 1px solid var(--border);
+  vertical-align: top; color: var(--fg-soft); font-size: 13px;
+}
+.eval-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fg); }
+.eval-table tr:last-child td { border-bottom: none; }
+.pts { font-weight: 600; color: var(--accent); white-space: nowrap; }
+.eval-total td { border-top: 2px solid var(--border); padding-top: 10px; font-weight: 600; }
+.eval-total td:first-child { color: var(--fg); }
+
+.pasos ol { margin: 10px 0; padding-left: 22px; }
+.pasos li {
+  color: var(--fg-soft); font-size: 14px; margin-bottom: 10px; padding-left: 4px;
+}
+.pasos li::marker { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent); }
+
+.entrega-box {
+  background: var(--accent-bg); border: 1px solid var(--accent);
+  border-radius: 10px; padding: 16px 20px; margin: 20px 0;
+}
+.entrega-box .entrega-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 8px;
+}
+.entrega-box ul { margin: 0; padding-left: 18px; color: var(--accent-fg); font-size: 14px; }
+.entrega-box ul li { margin-bottom: 4px; }
+
+@media (max-width: 640px) {
+  .practica-header { flex-direction: column; gap: 8px; }
+  .practica-numero { font-size: 36px; }
+  .preview-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page-inner">
+
+<header class="practica-header">
+  <div class="practica-numero">P4</div>
+  <div class="practica-meta">
+    <div class="unit-label">UT03 · Práctica guiada · Sesión 4 · DIW · 2.º DAW</div>
+    <h1>HANA — CSS Grid avanzado: la página de menú</h1>
+    <p class="subtitulo">grid-template-areas · auto-fill/auto-fit · minmax() · líneas numéricas · grid implícito</p>
+  </div>
+</header>
+
+<!-- 1. CONTEXTO -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">1</span>Contexto</h2>
+  <p>En P3 colocaste los elementos del hero con <code>position: absolute</code>. Ahora toca maquetar la <strong>página entera</strong> del menú de HANA usando <strong>CSS Grid</strong> como herramienta principal. No se trata solo de crear una rejilla de tarjetas: aprenderás a nombrar áreas, a que el grid se adapte automáticamente al espacio disponible (<code>auto-fill</code>), y a colocar un elemento concreto en coordenadas exactas usando <strong>líneas numéricas</strong>.</p>
+  <p>El reto añadido: una tarjeta "especial del chef" que siempre ocupa dos columnas, esté donde esté en el flujo del grid.</p>
+</div>
+
+<!-- 2. CONCEPTOS -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">2</span>Conceptos que se trabajan</h2>
+  <div class="chips">
+    <span class="chip nuevo">grid-template-areas</span>
+    <span class="chip nuevo">grid-area</span>
+    <span class="chip nuevo">auto-fill vs auto-fit</span>
+    <span class="chip nuevo">minmax()</span>
+    <span class="chip nuevo">grid-column / grid-row span</span>
+    <span class="chip nuevo">grid implícito</span>
+    <span class="chip">repeat()</span>
+    <span class="chip">gap</span>
+    <span class="chip">mobile-first</span>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div class="callout-body">
+      <strong>Grid vs Flexbox — cuándo usar cada uno</strong>
+      Flexbox es unidimensional: organiza elementos en una fila <em>o</em> en una columna. Grid es bidimensional: controla filas <em>y</em> columnas al mismo tiempo. Para layouts de página completa, cuadrículas de tarjetas o cualquier diseño con dos ejes, Grid es la herramienta correcta.
+    </div>
+  </div>
+</div>
+
+<!-- 3. RESULTADO ESPERADO -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">3</span>Resultado esperado</h2>
+  <p>Layout de la página de menú en cada breakpoint. La tarjeta marcada con <strong>★</strong> es el plato especial del chef y siempre ocupa dos columnas:</p>
+  <div class="preview-grid">
+    <div class="preview-wrap">
+      <div class="preview-label">📱 Móvil — 1 col</div>
+      <canvas class="preview-canvas" id="cv-movil" width="280" height="360"></canvas>
+    </div>
+    <div class="preview-wrap">
+      <div class="preview-label">📐 Tablet — 2 col auto-fill</div>
+      <canvas class="preview-canvas" id="cv-tablet" width="280" height="360"></canvas>
+    </div>
+    <div class="preview-wrap">
+      <div class="preview-label">🖥 Desktop — 3 col + areas</div>
+      <canvas class="preview-canvas" id="cv-desktop" width="280" height="360"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 4. CÓDIGO BASE -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">4</span>Código base</h2>
+  <p>Crea un archivo <code>ut03-p4.html</code> con este HTML. <strong>No lo modifiques.</strong> Hay <strong>14 TODOs</strong> en el CSS.</p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="file-tag">HTML</span> index.html — no modificar</div>
+    <pre><span class="k">&lt;!DOCTYPE html&gt;</span>
+<span class="k">&lt;html</span> <span class="n">lang</span>=<span class="s">"es"</span><span class="k">&gt;</span>
+<span class="k">&lt;head&gt;</span>
+  <span class="k">&lt;meta</span> <span class="n">charset</span>=<span class="s">"UTF-8"</span><span class="k">&gt;</span>
+  <span class="k">&lt;meta</span> <span class="n">name</span>=<span class="s">"viewport"</span> <span class="n">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="k">&gt;</span>
+  <span class="k">&lt;title&gt;</span>HANA · Menú<span class="k">&lt;/title&gt;</span>
+  <span class="k">&lt;link</span> <span class="n">rel</span>=<span class="s">"stylesheet"</span> <span class="n">href</span>=<span class="s">"style.css"</span><span class="k">&gt;</span>
+<span class="k">&lt;/head&gt;</span>
+<span class="k">&lt;body&gt;</span>
+
+<span class="c">&lt;!-- ── LAYOUT PRINCIPAL ── --&gt;</span>
+<span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"pagina"</span><span class="k">&gt;</span>
+
+  <span class="k">&lt;header</span> <span class="n">class</span>=<span class="s">"site-header"</span><span class="k">&gt;</span>
+    <span class="k">&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span> <span class="n">class</span>=<span class="s">"logo"</span><span class="k">&gt;</span>HANA<span class="k">&lt;/a&gt;</span>
+    <span class="k">&lt;nav&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Carta<span class="k">&lt;/a&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Reservar<span class="k">&lt;/a&gt;&lt;/nav&gt;</span>
+  <span class="k">&lt;/header&gt;</span>
+
+  <span class="k">&lt;aside</span> <span class="n">class</span>=<span class="s">"sidebar"</span><span class="k">&gt;</span>
+    <span class="k">&lt;h3&gt;</span>Categorías<span class="k">&lt;/h3&gt;</span>
+    <span class="k">&lt;ul&gt;</span>
+      <span class="k">&lt;li&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Entrantes<span class="k">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="k">&lt;li&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Sopas y ramens<span class="k">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="k">&lt;li&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Sushi<span class="k">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="k">&lt;li&gt;&lt;a</span> <span class="n">href</span>=<span class="s">"#"</span><span class="k">&gt;</span>Postres<span class="k">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="k">&lt;/ul&gt;</span>
+  <span class="k">&lt;/aside&gt;</span>
+
+  <span class="k">&lt;main</span> <span class="n">class</span>=<span class="s">"contenido"</span><span class="k">&gt;</span>
+    <span class="k">&lt;h2</span> <span class="n">class</span>=<span class="s">"seccion-titulo"</span><span class="k">&gt;</span>Nuestro menú<span class="k">&lt;/h2&gt;</span>
+
+    <span class="c">&lt;!-- Grid de tarjetas --&gt;</span>
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"menu-grid"</span><span class="k">&gt;</span>
+
+      <span class="c">&lt;!-- Plato especial: ocupa 2 columnas --&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card especial"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/800x400/?japanese-kaiseki,omakase,1"</span> <span class="n">alt</span>=<span class="s">"Omakase Primavera"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;</span>
+          <span class="k">&lt;span</span> <span class="n">class</span>=<span class="s">"badge-especial"</span><span class="k">&gt;</span>★ Especial del chef<span class="k">&lt;/span&gt;</span>
+          <span class="k">&lt;h3&gt;</span>Omakase Primavera<span class="k">&lt;/h3&gt;</span>
+          <span class="k">&lt;p&gt;</span>Menú degustación de 8 tiempos con maridaje de sake<span class="k">&lt;/p&gt;</span>
+          <span class="k">&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>58 €<span class="k">&lt;/span&gt;</span>
+        <span class="k">&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+
+      <span class="c">&lt;!-- Platos normales --&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/400x300/?gyoza,japanese-dumplings,2"</span> <span class="n">alt</span>=<span class="s">"Gyoza"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;&lt;h3&gt;</span>Gyoza Especial<span class="k">&lt;/h3&gt;&lt;p&gt;</span>8 piezas · ponzu<span class="k">&lt;/p&gt;&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>9 €<span class="k">&lt;/span&gt;&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/400x300/?ramen,japanese-noodles,3"</span> <span class="n">alt</span>=<span class="s">"Ramen"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;&lt;h3&gt;</span>Ramen Shoyu<span class="k">&lt;/h3&gt;&lt;p&gt;</span>Caldo de pollo 12h<span class="k">&lt;/p&gt;&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>12 €<span class="k">&lt;/span&gt;&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/400x300/?sushi,nigiri,4"</span> <span class="n">alt</span>=<span class="s">"Sushi"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;&lt;h3&gt;</span>Sushi Omakase<span class="k">&lt;/h3&gt;&lt;p&gt;</span>12 piezas · selecc. chef<span class="k">&lt;/p&gt;&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>28 €<span class="k">&lt;/span&gt;&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/400x300/?mochi,japanese-dessert,5"</span> <span class="n">alt</span>=<span class="s">"Mochi"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;&lt;h3&gt;</span>Mochi Ice Cream<span class="k">&lt;/h3&gt;&lt;p&gt;</span>3 sabores · mango<span class="k">&lt;/p&gt;&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>6 €<span class="k">&lt;/span&gt;&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"menu-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-img"</span><span class="k">&gt;&lt;img</span> <span class="n">src</span>=<span class="s">"https://source.unsplash.com/400x300/?edamame,japanese-food,6"</span> <span class="n">alt</span>=<span class="s">"Edamame"</span><span class="k">&gt;&lt;/div&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"card-body"</span><span class="k">&gt;&lt;h3&gt;</span>Edamame<span class="k">&lt;/h3&gt;&lt;p&gt;</span>Sal marina · limón<span class="k">&lt;/p&gt;&lt;span</span> <span class="n">class</span>=<span class="s">"precio"</span><span class="k">&gt;</span>4 €<span class="k">&lt;/span&gt;&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+
+    <span class="k">&lt;/div&gt;</span><span class="c">&lt;!-- /.menu-grid --&gt;</span>
+  <span class="k">&lt;/main&gt;</span>
+
+  <span class="k">&lt;footer</span> <span class="n">class</span>=<span class="s">"site-footer"</span><span class="k">&gt;</span>
+    <span class="k">&lt;p&gt;</span>© 2024 HANA Restaurante · Todos los derechos reservados<span class="k">&lt;/p&gt;</span>
+  <span class="k">&lt;/footer&gt;</span>
+
+<span class="k">&lt;/div&gt;</span><span class="c">&lt;!-- /.pagina --&gt;</span>
+<span class="k">&lt;/body&gt;&lt;/html&gt;</span></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label"><span class="file-tag">CSS</span> style.css — completa los TODO</div>
+    <pre><span class="n">*</span> { <span class="k">box-sizing</span>: <span class="v">border-box</span>; <span class="k">margin</span>: <span class="v">0</span>; <span class="k">padding</span>: <span class="v">0</span>; }
+<span class="n">body</span> { <span class="k">font-family</span>: <span class="v">system-ui, sans-serif</span>; <span class="k">background</span>: <span class="v">#f5f5f5</span>; <span class="k">color</span>: <span class="v">#1a1d2e</span>; }
+<span class="n">a</span>    { <span class="k">text-decoration</span>: <span class="v">none</span>; <span class="k">color</span>: <span class="v">inherit</span>; }
+<span class="n">ul</span>   { <span class="k">list-style</span>: <span class="v">none</span>; <span class="k">padding</span>: <span class="v">0</span>; }
+
+<span class="c">/* ════════════════════════════════════════════
+   LAYOUT GENERAL — mobile-first
+   En móvil: todo apilado en una columna
+   En desktop: sidebar izquierda + contenido
+   ════════════════════════════════════════════ */</span>
+
+<span class="n">.pagina</span> {
+  <span class="k">max-width</span>: <span class="v">1100px</span>; <span class="k">margin</span>: <span class="v">0 auto</span>; <span class="k">padding</span>: <span class="v">0 16px</span>;
+
+  <span class="c">/* TODO 1: Convierte .pagina en grid container.
+     En móvil, una sola columna (1fr).
+     Define las áreas: header, sidebar, contenido, footer */</span>
+  <span class="c">/* display: grid; */</span>
+  <span class="c">/* grid-template-columns: ???; */</span>
+  <span class="c">/* grid-template-areas:
+       "header"
+       "sidebar"
+       "contenido"
+       "footer"; */</span>
+  <span class="c">/* gap: 0 24px; */</span>
+}
+
+<span class="n">.site-header</span> {
+  <span class="c">/* TODO 2: Asigna el área "header" */</span>
+  <span class="c">/* grid-area: ???; */</span>
+  <span class="k">display</span>: <span class="v">flex</span>; <span class="k">align-items</span>: <span class="v">center</span>; <span class="k">justify-content</span>: <span class="v">space-between</span>;
+  <span class="k">padding</span>: <span class="v">16px 0</span>; <span class="k">border-bottom</span>: <span class="v">2px solid #e0e0e0</span>;
+}
+<span class="n">.logo</span>      { <span class="k">font-size</span>: <span class="v">1.5rem</span>; <span class="k">font-weight</span>: <span class="v">900</span>; <span class="k">letter-spacing</span>: <span class="v">.1em</span>; }
+<span class="n">.site-header nav a</span> { <span class="k">margin-left</span>: <span class="v">20px</span>; <span class="k">color</span>: <span class="v">#5a6070</span>; <span class="k">font-size</span>: <span class="v">.9rem</span>; }
+
+<span class="n">.sidebar</span> {
+  <span class="c">/* TODO 3: Asigna el área "sidebar" */</span>
+  <span class="c">/* grid-area: ???; */</span>
+  <span class="k">padding</span>: <span class="v">20px 0</span>;
+}
+<span class="n">.sidebar h3</span> { <span class="k">font-size</span>: <span class="v">.75rem</span>; <span class="k">letter-spacing</span>: <span class="v">.1em</span>; <span class="k">text-transform</span>: <span class="v">uppercase</span>; <span class="k">color</span>: <span class="v">#9099aa</span>; <span class="k">margin-bottom</span>: <span class="v">10px</span>; }
+<span class="n">.sidebar li a</span> { <span class="k">display</span>: <span class="v">block</span>; <span class="k">padding</span>: <span class="v">6px 0</span>; <span class="k">color</span>: <span class="v">#5a6070</span>; <span class="k">font-size</span>: <span class="v">.9rem</span>; }
+<span class="n">.sidebar li a:hover</span> { <span class="k">color</span>: <span class="v">#e09a1a</span>; }
+
+<span class="n">.contenido</span> {
+  <span class="c">/* TODO 4: Asigna el área "contenido" */</span>
+  <span class="c">/* grid-area: ???; */</span>
+  <span class="k">padding</span>: <span class="v">24px 0</span>;
+}
+<span class="n">.seccion-titulo</span> { <span class="k">font-size</span>: <span class="v">1.4rem</span>; <span class="k">font-weight</span>: <span class="v">700</span>; <span class="k">margin-bottom</span>: <span class="v">20px</span>; }
+
+<span class="n">.site-footer</span> {
+  <span class="c">/* TODO 5: Asigna el área "footer" */</span>
+  <span class="c">/* grid-area: ???; */</span>
+  <span class="k">padding</span>: <span class="v">20px 0</span>; <span class="k">border-top</span>: <span class="v">1px solid #e0e0e0</span>;
+  <span class="k">font-size</span>: <span class="v">.85rem</span>; <span class="k">color</span>: <span class="v">#9099aa</span>; <span class="k">text-align</span>: <span class="v">center</span>;
+}
+
+<span class="c">/* ════════════════════════════════════════════
+   GRID DE TARJETAS — auto-fill responsive
+   ════════════════════════════════════════════ */</span>
+
+<span class="n">.menu-grid</span> {
+  <span class="c">/* TODO 6: Grid container con columnas automáticas.
+     Usa repeat(auto-fill, minmax(min(100%, 240px), 1fr))
+     para que las columnas se adapten solas al espacio */</span>
+  <span class="c">/* display: grid; */</span>
+  <span class="c">/* grid-template-columns: ???; */</span>
+  <span class="k">gap</span>: <span class="v">16px</span>;
+}
+
+<span class="c">/* ── Tarjeta base ── */</span>
+<span class="n">.menu-card</span> {
+  <span class="k">background</span>: <span class="v">white</span>; <span class="k">border-radius</span>: <span class="v">10px</span>;
+  <span class="k">overflow</span>: <span class="v">hidden</span>; <span class="k">box-shadow</span>: <span class="v">0 2px 8px rgba(0,0,0,.07)</span>;
+}
+<span class="n">.card-img</span> {
+  <span class="k">height</span>: <span class="v">160px</span>; <span class="k">overflow</span>: <span class="v">hidden</span>;
+}
+<span class="n">.card-img img</span> {
+  <span class="k">width</span>: <span class="v">100%</span>; <span class="k">height</span>: <span class="v">100%</span>; <span class="k">object-fit</span>: <span class="v">cover</span>; <span class="k">display</span>: <span class="v">block</span>;
+}
+<span class="n">.card-body</span> { <span class="k">padding</span>: <span class="v">16px</span>; }
+<span class="n">.card-body h3</span> { <span class="k">font-size</span>: <span class="v">1rem</span>; <span class="k">margin-bottom</span>: <span class="v">4px</span>; }
+<span class="n">.card-body p</span>  { <span class="k">font-size</span>: <span class="v">.85rem</span>; <span class="k">color</span>: <span class="v">#5a6070</span>; <span class="k">margin-bottom</span>: <span class="v">8px</span>; }
+<span class="n">.precio</span>       { <span class="k">font-weight</span>: <span class="v">700</span>; <span class="k">color</span>: <span class="v">#e09a1a</span>; }
+
+<span class="c">/* ── Tarjeta especial del chef ── */</span>
+<span class="n">.especial</span> {
+  <span class="c">/* TODO 7: Haz que la tarjeta especial ocupe 2 columnas.
+     En grid, un elemento puede expandirse con:
+     grid-column: span 2
+     (si solo hay 1 columna en móvil, ponlo solo en tablet+) */</span>
+}
+<span class="n">.especial .card-img</span> {
+  <span class="c">/* TODO 8: La imagen de la especial es más alta: 220px */</span>
+  <span class="c">/* height: ???; */</span>
+}
+<span class="n">.badge-especial</span> {
+  <span class="k">display</span>: <span class="v">inline-block</span>; <span class="k">font-size</span>: <span class="v">.75rem</span>;
+  <span class="k">background</span>: <span class="v">#e09a1a</span>; <span class="k">color</span>: <span class="v">white</span>;
+  <span class="k">padding</span>: <span class="v">3px 10px</span>; <span class="k">border-radius</span>: <span class="v">20px</span>;
+  <span class="k">font-weight</span>: <span class="v">700</span>; <span class="k">margin-bottom</span>: <span class="v">8px</span>;
+}
+
+<span class="c">/* ════════════════════════════════════════════
+   TABLET: ≥ 768px
+   El grid de tarjetas se adapta solo con auto-fill.
+   El layout de página aún es de 1 columna.
+   ════════════════════════════════════════════ */</span>
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">768px</span>) {
+  <span class="n">.especial</span> {
+    <span class="c">/* TODO 9: En tablet ya hay 2 columnas → activar span 2 */</span>
+    <span class="c">/* grid-column: ???; */</span>
+  }
+}
+
+<span class="c">/* ════════════════════════════════════════════
+   DESKTOP: ≥ 1024px
+   El layout de página cambia: sidebar | contenido
+   ════════════════════════════════════════════ */</span>
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">1024px</span>) {
+  <span class="n">.pagina</span> {
+    <span class="c">/* TODO 10: Redefinir las columnas para el layout de escritorio:
+       sidebar fija de 200px + contenido que ocupa el resto (1fr).
+       El header y footer siguen abarcando todo el ancho */</span>
+    <span class="c">/* grid-template-columns: ???; */</span>
+
+    <span class="c">/* TODO 11: Redefinir las áreas para desktop:
+       header ocupa las 2 columnas en la primera fila,
+       sidebar y contenido van en la segunda fila,
+       footer ocupa las 2 columnas en la última fila */</span>
+    <span class="c">/* grid-template-areas:
+         "header  header"
+         "sidebar ???"
+         "footer  footer"; */</span>
+  }
+
+  <span class="n">.menu-grid</span> {
+    <span class="c">/* TODO 12: En desktop, fuerza 3 columnas fijas para las tarjetas */</span>
+    <span class="c">/* grid-template-columns: ???; */</span>
+  }
+
+  <span class="n">.especial</span> {
+    <span class="c">/* TODO 13: En desktop con 3 columnas, el especial sigue
+       ocupando 2 columnas. Puedes además usar grid-row: span 2
+       si quieres que también sea más alto. Aplica solo span 2 col */</span>
+    <span class="c">/* grid-column: ???; */</span>
+  }
+}
+
+<span class="c">/* ════════════════════════════════════════════
+   WIDESCREEN: ≥ 1280px
+   Colocación exacta con líneas numéricas
+   ════════════════════════════════════════════ */</span>
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">1280px</span>) {
+  <span class="n">.menu-grid</span> {
+    <span class="c">/* TODO 14: En widescreen, el grid pasa a 4 columnas.
+       Usa líneas numéricas: grid-template-columns: repeat(4, 1fr)
+       El especial ocupará de la línea 1 a la 3 (2 columnas)
+       — el span del TODO 13 ya lo hace automáticamente */</span>
+    <span class="c">/* grid-template-columns: ???; */</span>
+  }
+}</pre>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div class="callout-body">
+      <strong><code>auto-fill</code> vs <code>auto-fit</code></strong>
+      Ambos crean columnas automáticamente. La diferencia está cuando hay pocos elementos: <code>auto-fill</code> mantiene las columnas vacías (el grid mantiene su estructura), <code>auto-fit</code> las colapsa y los elementos existentes crecen para llenar el espacio. Para la mayoría de grids de tarjetas, <code>auto-fill</code> con <code>minmax</code> es la opción correcta.
+    </div>
+  </div>
+</div>
+
+<!-- 5. CONCEPTOS -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">5</span>Conceptos clave</h2>
+
+  <p><strong>grid-template-areas — nombrar regiones del layout</strong></p>
+  <div class="code-block">
+    <div class="code-label">📐 grid-template-areas</div>
+    <pre><span class="c">/* En el container: dibuja el layout con nombres */</span>
+<span class="n">.pagina</span> {
+  <span class="k">display</span>: <span class="v">grid</span>;
+  <span class="k">grid-template-columns</span>: <span class="v">200px 1fr</span>;
+  <span class="k">grid-template-areas</span>:
+    <span class="s">"header  header"</span>   <span class="c">/* fila 1: header ocupa 2 cols */</span>
+    <span class="s">"sidebar contenido"</span> <span class="c">/* fila 2: sidebar + contenido */</span>
+    <span class="s">"footer  footer"</span>;   <span class="c">/* fila 3: footer ocupa 2 cols */</span>
+}
+
+<span class="c">/* En cada hijo: asígnalo a un área */</span>
+<span class="n">.site-header</span> { <span class="k">grid-area</span>: <span class="v">header</span>; }
+<span class="n">.sidebar</span>     { <span class="k">grid-area</span>: <span class="v">sidebar</span>; }
+<span class="n">.contenido</span>   { <span class="k">grid-area</span>: <span class="v">contenido</span>; }
+<span class="n">.site-footer</span> { <span class="k">grid-area</span>: <span class="v">footer</span>; }</pre>
+  </div>
+
+  <p><strong>auto-fill + minmax() — columnas que se adaptan solas</strong></p>
+  <div class="code-block">
+    <div class="code-label">📐 auto-fill con minmax</div>
+    <pre><span class="c">/* Las columnas se crean automáticamente:
+   - Mínimo 240px cada una
+   - Máximo: 1fr (reparten el espacio sobrante)
+   - En móvil cabe 1 columna, en tablet 2, en desktop 3... */</span>
+<span class="n">.menu-grid</span> {
+  <span class="k">display</span>: <span class="v">grid</span>;
+  <span class="k">grid-template-columns</span>: <span class="v">repeat(auto-fill, minmax(min(100%, 240px), 1fr))</span>;
+  <span class="k">gap</span>: <span class="v">16px</span>;
+}
+
+<span class="c">/* min(100%, 240px): si el contenedor mide menos de 240px
+   (ej. móvil estrecho), el mínimo se reduce para evitar
+   desbordamiento horizontal. Siempre úsala con auto-fill. */</span></pre>
+  </div>
+
+  <p><strong>grid-column span — elemento que ocupa varias columnas</strong></p>
+  <div class="code-block">
+    <div class="code-label">📐 span y líneas numéricas</div>
+    <pre><span class="c">/* Forma 1: span (relativa) — ocupa N columnas desde donde esté */</span>
+<span class="n">.especial</span> { <span class="k">grid-column</span>: <span class="v">span 2</span>; }
+
+<span class="c">/* Forma 2: líneas numéricas (absoluta) — de línea X a línea Y */</span>
+<span class="n">.especial</span> { <span class="k">grid-column</span>: <span class="v">1 / 3</span>; }   <span class="c">/* de col 1 a col 3 (ocupa 2) */</span>
+<span class="n">.especial</span> { <span class="k">grid-column</span>: <span class="v">2 / 4</span>; }   <span class="c">/* de col 2 a col 4 (ocupa 2) */</span>
+<span class="n">.especial</span> { <span class="k">grid-column</span>: <span class="v">1 / -1</span>; }  <span class="c">/* de la primera a la última */</span>
+
+<span class="c">/* grid-row funciona igual pero para filas */</span>
+<span class="n">.especial</span> { <span class="k">grid-row</span>: <span class="v">span 2</span>; }     <span class="c">/* ocupa 2 filas de altura */</span>
+
+<span class="c">/* Las líneas son los bordes de las celdas:
+   col 1  col 2  col 3
+   |──────|──────|──────|
+   1      2      3      4 (líneas numéricas)  */</span></pre>
+  </div>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>Grid implícito — las filas que crea el navegador</strong>
+      Cuando defines <code>grid-template-columns</code> pero no <code>grid-template-rows</code>, el navegador crea filas automáticamente para los elementos que no caben en las columnas definidas. Eso es el <em>grid implícito</em>. Puedes controlar su altura con <code>grid-auto-rows: minmax(200px, auto)</code>.
+    </div>
+  </div>
+</div>
+
+<!-- 6. GUÍA PASO A PASO -->
+<div class="bloque pasos">
+  <h2 class="bloque-titulo"><span class="num">6</span>Guía paso a paso</h2>
+  <ol>
+    <li><strong>TODOs 1–5 — Layout de página con áreas:</strong> dale a <code>.pagina</code> un <code>display: grid</code> de una sola columna en móvil y define las cuatro áreas en orden vertical: <code>"header" "sidebar" "contenido" "footer"</code>. Luego asigna cada área a su elemento con <code>grid-area</code>.</li>
+    <li><strong>TODO 6 — Grid de tarjetas auto-fill:</strong> añade a <code>.menu-grid</code> el valor <code>repeat(auto-fill, minmax(min(100%, 240px), 1fr))</code>. Verás que en móvil se queda en 1 columna y en tablet pasa a 2 columnas sin ninguna media query.</li>
+    <li><strong>TODOs 7, 8 — Tarjeta especial en móvil:</strong> en móvil solo hay 1 columna, así que <code>span 2</code> no tiene efecto todavía. Solo cambia la altura de la imagen: <code>.especial .card-img { height: 220px }</code>.</li>
+    <li><strong>TODO 9 — Span en tablet:</strong> dentro de <code>@media (min-width: 768px)</code>, añade <code>.especial { grid-column: span 2 }</code>. Ahora el especial ocupa las dos columnas del grid.</li>
+    <li><strong>TODOs 10, 11 — Layout desktop con sidebar:</strong> dentro de <code>@media (min-width: 1024px)</code>, cambia las columnas de <code>.pagina</code> a <code>200px 1fr</code> y redefine las áreas: <code>"header header" / "sidebar contenido" / "footer footer"</code>.</li>
+    <li><strong>TODO 12 — 3 columnas fijas en desktop:</strong> en el mismo breakpoint, añade <code>grid-template-columns: repeat(3, 1fr)</code> a <code>.menu-grid</code>. Con 3 columnas, <code>span 2</code> sigue funcionando.</li>
+    <li><strong>TODO 13 — span en desktop:</strong> el <code>span 2</code> del TODO 9 ya funciona aquí. Si quieres, añade también <code>grid-row: span 2</code> para que el especial sea más alto visualmente.</li>
+    <li><strong>TODO 14 — 4 columnas con líneas numéricas en widescreen:</strong> en <code>@media (min-width: 1280px)</code>, cambia a <code>repeat(4, 1fr)</code>. El especial con <code>span 2</code> seguirá ocupando 2 de las 4 columnas.</li>
+  </ol>
+</div>
+
+<!-- 7. SOLUCIÓN -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">7</span>Solución comentada</h2>
+  <p>Solo los bloques que cambian. Las líneas en <span style="background:rgba(240,171,40,.2);padding:1px 4px;border-radius:3px;color:var(--accent-fg);">amarillo</span> son los TODOs resueltos.</p>
+
+  <div class="code-block">
+    <div class="code-label">✅ <span class="file-tag">CSS</span> style.css — solución</div>
+    <pre><span class="n">.pagina</span> {
+  <span class="k">max-width</span>: <span class="v">1100px</span>; <span class="k">margin</span>: <span class="v">0 auto</span>; <span class="k">padding</span>: <span class="v">0 16px</span>;
+<span class="hl">  <span class="k">display</span>: <span class="v">grid</span>;                        <span class="c">/* TODO 1a */</span></span>
+<span class="hl">  <span class="k">grid-template-columns</span>: <span class="v">1fr</span>;           <span class="c">/* TODO 1b: 1 col en móvil */</span></span>
+<span class="hl">  <span class="k">grid-template-areas</span>:                   <span class="c">/* TODO 1c */</span></span>
+<span class="hl">    <span class="s">"header"</span></span>
+<span class="hl">    <span class="s">"sidebar"</span></span>
+<span class="hl">    <span class="s">"contenido"</span></span>
+<span class="hl">    <span class="s">"footer"</span>;</span>
+<span class="hl">  <span class="k">gap</span>: <span class="v">0 24px</span>;</span>
+}
+
+<span class="n">.site-header</span> {
+<span class="hl">  <span class="k">grid-area</span>: <span class="v">header</span>;      <span class="c">/* TODO 2 */</span></span>
+  <span class="k">display</span>: <span class="v">flex</span>; <span class="k">align-items</span>: <span class="v">center</span>; <span class="k">justify-content</span>: <span class="v">space-between</span>;
+  <span class="k">padding</span>: <span class="v">16px 0</span>; <span class="k">border-bottom</span>: <span class="v">2px solid #e0e0e0</span>;
+}
+<span class="n">.sidebar</span> {
+<span class="hl">  <span class="k">grid-area</span>: <span class="v">sidebar</span>;     <span class="c">/* TODO 3 */</span></span>
+  <span class="k">padding</span>: <span class="v">20px 0</span>;
+}
+<span class="n">.contenido</span> {
+<span class="hl">  <span class="k">grid-area</span>: <span class="v">contenido</span>;   <span class="c">/* TODO 4 */</span></span>
+  <span class="k">padding</span>: <span class="v">24px 0</span>;
+}
+<span class="n">.site-footer</span> {
+<span class="hl">  <span class="k">grid-area</span>: <span class="v">footer</span>;      <span class="c">/* TODO 5 */</span></span>
+  <span class="k">padding</span>: <span class="v">20px 0</span>; <span class="k">border-top</span>: <span class="v">1px solid #e0e0e0</span>;
+  <span class="k">font-size</span>: <span class="v">.85rem</span>; <span class="k">color</span>: <span class="v">#9099aa</span>; <span class="k">text-align</span>: <span class="v">center</span>;
+}
+
+<span class="n">.menu-grid</span> {
+<span class="hl">  <span class="k">display</span>: <span class="v">grid</span>;                                      <span class="c">/* TODO 6a */</span></span>
+<span class="hl">  <span class="k">grid-template-columns</span>: <span class="v">repeat(auto-fill, minmax(min(100%, 240px), 1fr))</span>; <span class="c">/* TODO 6b */</span></span>
+  <span class="k">gap</span>: <span class="v">16px</span>;
+}
+
+<span class="n">.especial .card-img</span> {
+<span class="hl">  <span class="k">height</span>: <span class="v">220px</span>;          <span class="c">/* TODO 8: imagen más alta */</span></span>
+  <span class="k">background</span>: <span class="v">linear-gradient(135deg, #2a3a4a, #1a2a3a)</span>;
+}
+
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">768px</span>) {
+  <span class="n">.especial</span> {
+<span class="hl">    <span class="k">grid-column</span>: <span class="v">span 2</span>;    <span class="c">/* TODO 9: ocupa 2 de las 2 col */</span></span>
+  }
+}
+
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">1024px</span>) {
+  <span class="n">.pagina</span> {
+<span class="hl">    <span class="k">grid-template-columns</span>: <span class="v">200px 1fr</span>;   <span class="c">/* TODO 10 */</span></span>
+<span class="hl">    <span class="k">grid-template-areas</span>:                  <span class="c">/* TODO 11 */</span></span>
+<span class="hl">      <span class="s">"header  header"</span></span>
+<span class="hl">      <span class="s">"sidebar contenido"</span></span>
+<span class="hl">      <span class="s">"footer  footer"</span>;</span>
+  }
+  <span class="n">.menu-grid</span> {
+<span class="hl">    <span class="k">grid-template-columns</span>: <span class="v">repeat(3, 1fr)</span>;  <span class="c">/* TODO 12 */</span></span>
+  }
+  <span class="n">.especial</span> {
+<span class="hl">    <span class="k">grid-column</span>: <span class="v">span 2</span>;    <span class="c">/* TODO 13: sigue ocupando 2 de 3 */</span></span>
+  }
+}
+
+<span class="k">@media</span> (<span class="n">min-width</span>: <span class="v">1280px</span>) {
+  <span class="n">.menu-grid</span> {
+<span class="hl">    <span class="k">grid-template-columns</span>: <span class="v">repeat(4, 1fr)</span>;  <span class="c">/* TODO 14 */</span></span>
+    <span class="c">/* .especial con span 2 sigue correcto: ocupa 2 de 4 */</span>
+  }
+}</pre>
+  </div>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>¿Por qué <code>repeat(auto-fill, minmax(min(100%, 240px), 1fr))</code> y no simplemente <code>minmax(240px, 1fr)</code>?</strong>
+      Sin el <code>min(100%, 240px)</code>, si el contenedor mide menos de 240px (teléfono muy estrecho o elemento anidado), el grid intentaría crear una columna de 240px y causaría scroll horizontal. <code>min(100%, 240px)</code> dice "lo que sea menor: el 100% del contenedor o 240px". Es la forma robusta de usar <code>auto-fill</code>.
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong><code>grid-template-areas</code> + <code>grid-area</code>: ventajas</strong>
+      El layout queda visual en el CSS — puedes leer la cuadrícula de texto y ver el diseño. Cambiar el layout en un breakpoint es tan simple como reescribir la cadena de áreas, sin tocar los hijos. Es la técnica más legible para layouts de página completa.
+    </div>
+  </div>
+</div>
+
+<!-- 8. EVALUACIÓN -->
+<div class="bloque">
+  <h2 class="bloque-titulo"><span class="num">8</span>Criterios de evaluación</h2>
+  <div style="overflow-x:auto">
+    <table class="eval-table">
+      <thead><tr><th>Criterio</th><th>Descripción</th><th class="pts">Pts</th></tr></thead>
+      <tbody>
+        <tr><td>grid-template-areas</td><td>El layout usa áreas nombradas. Los elementos tienen <code>grid-area</code> asignado.</td><td class="pts">2</td></tr>
+        <tr><td>auto-fill + minmax()</td><td>El grid de tarjetas usa <code>auto-fill</code> con <code>minmax</code>. Se adapta sin media queries entre 1 y 2+ columnas.</td><td class="pts">2,5</td></tr>
+        <tr><td>Tarjeta especial</td><td>La tarjeta <code>.especial</code> ocupa 2 columnas en tablet y desktop. En móvil se ve como las demás (1 columna).</td><td class="pts">2</td></tr>
+        <tr><td>Layout desktop</td><td>En ≥1024px aparece el sidebar a la izquierda con 200px y el contenido ocupa el resto.</td><td class="pts">2</td></tr>
+        <tr><td>Grid implícito</td><td>Las tarjetas que no caben en filas definidas se colocan correctamente en filas implícitas.</td><td class="pts">1</td></tr>
+        <tr><td>Widescreen 4 col</td><td>En ≥1280px el grid pasa a 4 columnas. El especial sigue ocupando 2.</td><td class="pts">0,5</td></tr>
+        <tr class="eval-total"><td>Total</td><td></td><td class="pts">10</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 9. ENTREGA -->
+<div class="entrega-box">
+  <div class="entrega-label">📁 Entrega</div>
+  <ul>
+    <li>Archivos <code>ut03-p4.html</code> + <code>style.css</code> en la misma carpeta</li>
+    <li>El layout completo funciona: header, sidebar (solo en desktop), contenido y footer</li>
+    <li>La tarjeta especial ocupa 2 columnas en tablet y desktop</li>
+    <li>No usar <code>position: absolute</code> para hacer el layout de página</li>
+  </ul>
+</div>
+
+</div><!-- /page-inner -->
+
+<script>
+/* ── Previsualizaciones canvas P4: Grid avanzado ── */
+
+function getC() {
+  const d = document.documentElement.dataset.theme === 'dark' ||
+    (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme:dark)').matches);
+  return {
+    bg:       d ? '#131620' : '#eeeff4',
+    card:     d ? '#1c1f2e' : '#ffffff',
+    cardImg1: d ? '#1a2535' : '#c8d8e8',
+    cardImg2: d ? '#0d1520' : '#a8b8c8',
+    espImg1:  d ? '#0a1520' : '#2a3a4a',
+    espImg2:  d ? '#050a10' : '#1a2a3a',
+    header:   d ? '#1c1f2e' : '#ffffff',
+    sidebar:  d ? '#1a1d28' : '#f4f5f8',
+    footer:   d ? '#1c1f2e' : '#f0f0f0',
+    text:     d ? '#e8ebf4' : '#1a1d2e',
+    textSoft: d ? '#9099aa' : '#5a6070',
+    accent:   '#e09a1a',
+    border:   d ? '#2a2d3e' : '#e2e5ec',
+    gridLine: d ? 'rgba(224,154,26,.25)' : 'rgba(224,154,26,.3)',
+    shadow:   d ? 'rgba(0,0,0,.4)' : 'rgba(0,0,0,.08)'
+  };
+}
+
+function setupC(id, W, H) {
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return ctx;
+}
+
+function drawCard(ctx, x, y, w, h, cl, isEsp, title, price) {
+  /* sombra */
+  ctx.shadowColor = cl.shadow; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
+  ctx.fillStyle = cl.card;
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 6); ctx.fill();
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+
+  /* imagen */
+  const imgH = isEsp ? Math.min(h * 0.52, 80) : Math.min(h * 0.48, 65);
+  ctx.save();
+  ctx.beginPath(); ctx.roundRect(x, y, w, imgH, [6, 6, 0, 0]); ctx.clip();
+  const g = ctx.createLinearGradient(x, y, x + w, y + imgH);
+  g.addColorStop(0, isEsp ? cl.espImg1 : cl.cardImg1);
+  g.addColorStop(1, isEsp ? cl.espImg2 : cl.cardImg2);
+  ctx.fillStyle = g; ctx.fillRect(x, y, w, imgH);
+  if (isEsp) {
+    ctx.fillStyle = cl.accent;
+    ctx.beginPath(); ctx.roundRect(x + 6, y + 6, 65, 13, 6); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 7px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('★ Especial chef', x + 38, y + 16);
+  }
+  ctx.restore();
+
+  /* texto */
+  const ty = y + imgH + 11;
+  ctx.fillStyle = cl.text; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(title, x + 7, ty);
+  ctx.fillStyle = cl.accent; ctx.font = 'bold 8px sans-serif';
+  ctx.fillText(price, x + 7, ty + 13);
+}
+
+function drawHeader(ctx, x, y, w, cl) {
+  ctx.fillStyle = cl.header; ctx.fillRect(x, y, w, 26);
+  ctx.strokeStyle = cl.border; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, y + 26); ctx.lineTo(x + w, y + 26); ctx.stroke();
+  ctx.fillStyle = cl.text; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('HANA', x + 8, y + 17);
+  ctx.fillStyle = cl.textSoft; ctx.font = '8px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('Carta  Reservar', x + w - 8, y + 17);
+}
+
+function drawFooter(ctx, x, y, w, cl) {
+  ctx.fillStyle = cl.footer; ctx.fillRect(x, y, w, 20);
+  ctx.strokeStyle = cl.border; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.stroke();
+  ctx.fillStyle = cl.textSoft; ctx.font = '7px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('© 2024 HANA Restaurante', x + w/2, y + 13);
+}
+
+function drawAreaLabel(ctx, x, y, w, h, label, cl) {
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(x + 2, y + 2, w - 4, 11, 3); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('grid-area: ' + label, x + w/2, y + 11);
+}
+
+/* ── MÓVIL: 1 columna ── */
+function dibujarMovil(id) {
+  const W = 280, H = 360;
+  const ctx = setupC(id, W, H); if (!ctx) return;
+  const cl = getC();
+  ctx.fillStyle = cl.bg; ctx.fillRect(0, 0, W, H);
+
+  /* header */
+  drawHeader(ctx, 10, 8, W - 20, cl);
+
+  /* sidebar (apilado) */
+  ctx.fillStyle = cl.sidebar; ctx.fillRect(10, 38, W - 20, 30);
+  ctx.fillStyle = cl.textSoft; ctx.font = '7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText('sidebar  (en móvil: row)', 18, 56);
+
+  /* tarjetas: 1 col */
+  const cw = W - 20;
+  drawCard(ctx, 10, 72, cw, 70, cl, true, 'Omakase Primavera', '58 €');
+  drawCard(ctx, 10, 148, cw, 55, cl, false, 'Gyoza Especial', '9 €');
+  drawCard(ctx, 10, 209, cw, 55, cl, false, 'Ramen Shoyu', '12 €');
+
+  /* etiqueta 1 columna */
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(10, 269, cw, 12, 3); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('1 columna · sin span', W/2, 278);
+
+  drawFooter(ctx, 10, 285, W - 20, cl);
+
+  /* etiqueta grid-areas */
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(10, 308, (W-20)/2 - 4, 12, 3); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('"header"', 10 + (W-20)/4 - 2, 318);
+
+  ctx.beginPath(); ctx.roundRect((W-20)/2 + 14, 308, (W-20)/2 - 4, 12, 3); ctx.fill();
+  ctx.fillText('"contenido"', (W-20)*3/4 + 12, 318);
+
+  /* título breakpoint */
+  ctx.fillStyle = cl.textSoft; ctx.font = '8px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('grid-template-columns: 1fr', W/2, 340);
+  ctx.fillStyle = cl.textSoft; ctx.font = '8px monospace';
+  ctx.fillText('grid-template-areas: una columna', W/2, 353);
+}
+
+/* ── TABLET: 2 col auto-fill ── */
+function dibujarTablet(id) {
+  const W = 280, H = 360;
+  const ctx = setupC(id, W, H); if (!ctx) return;
+  const cl = getC();
+  ctx.fillStyle = cl.bg; ctx.fillRect(0, 0, W, H);
+
+  drawHeader(ctx, 10, 8, W - 20, cl);
+
+  /* sidebar como fila */
+  ctx.fillStyle = cl.sidebar; ctx.fillRect(10, 38, W - 20, 24);
+  ctx.fillStyle = cl.textSoft; ctx.font = '7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText('sidebar · 1 fila', 18, 53);
+
+  /* 2 columnas auto-fill */
+  const cw = (W - 20 - 8) / 2;
+  /* especial span 2 */
+  drawCard(ctx, 10, 66, W - 20, 72, cl, true, 'Omakase', '58 €');
+
+  /* línea de grid debajo */
+  ctx.strokeStyle = cl.gridLine; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(10 + cw + 4, 66); ctx.lineTo(10 + cw + 4, 138); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(10 + cw - 18, 93, 44, 12, 3); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('span 2', 10 + cw + 4, 103);
+
+  drawCard(ctx, 10, 142, cw, 65, cl, false, 'Gyoza', '9 €');
+  drawCard(ctx, 10 + cw + 8, 142, cw, 65, cl, false, 'Ramen', '12 €');
+  drawCard(ctx, 10, 213, cw, 65, cl, false, 'Sushi', '28 €');
+  drawCard(ctx, 10 + cw + 8, 213, cw, 65, cl, false, 'Mochi', '6 €');
+
+  drawFooter(ctx, 10, 282, W - 20, cl);
+
+  ctx.fillStyle = cl.textSoft; ctx.font = '8px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('auto-fill · minmax(min(100%,240px),1fr)', W/2, 310);
+  ctx.fillText('min-width: 768px', W/2, 324);
+}
+
+/* ── DESKTOP: layout 2 col + sidebar + 3 col cards ── */
+function dibujarDesktop(id) {
+  const W = 280, H = 360;
+  const ctx = setupC(id, W, H); if (!ctx) return;
+  const cl = getC();
+  ctx.fillStyle = cl.bg; ctx.fillRect(0, 0, W, H);
+
+  drawHeader(ctx, 10, 8, W - 20, cl);
+
+  /* sidebar | contenido */
+  const sbW = 56, mainX = 10 + sbW + 6, mainW = W - 10 - sbW - 6 - 10;
+
+  /* sidebar */
+  ctx.fillStyle = cl.sidebar;
+  ctx.beginPath(); ctx.roundRect(10, 38, sbW, 240, [0, 0, 4, 4]); ctx.fill();
+  ctx.strokeStyle = cl.border; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(10 + sbW, 38); ctx.lineTo(10 + sbW, 278); ctx.stroke();
+  ctx.fillStyle = cl.textSoft; ctx.font = '7px sans-serif'; ctx.textAlign = 'left';
+  ['Entrantes', 'Sopas', 'Sushi', 'Postres'].forEach((t, i) => {
+    ctx.fillText(t, 16, 55 + i * 18);
+  });
+  /* etiqueta área */
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(12, 38, sbW - 4, 11, 2); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '6px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('sidebar', 10 + sbW/2, 47);
+  ctx.fillStyle = cl.textSoft; ctx.font = '6px monospace';
+  ctx.fillText('200px', 10 + sbW/2, 102);
+
+  /* 3 tarjetas pequeñas */
+  const cw3 = (mainW - 8) / 3;
+  /* especial span 2 */
+  drawCard(ctx, mainX, 42, cw3 * 2 + 4, 68, cl, true, 'Omakase', '58 €');
+  drawCard(ctx, mainX + cw3 * 2 + 8, 42, cw3, 68, cl, false, 'Gyoza', '9 €');
+  drawCard(ctx, mainX, 115, cw3, 68, cl, false, 'Ramen', '12 €');
+  drawCard(ctx, mainX + cw3 + 4, 115, cw3, 68, cl, false, 'Sushi', '28 €');
+  drawCard(ctx, mainX + (cw3 + 4) * 2, 115, cw3, 68, cl, false, 'Mochi', '6 €');
+
+  /* etiqueta área contenido */
+  ctx.fillStyle = cl.gridLine;
+  ctx.beginPath(); ctx.roundRect(mainX, 42, mainW, 11, 2); ctx.fill();
+  ctx.fillStyle = cl.accent; ctx.font = '6px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('contenido · 1fr', mainX + mainW/2, 51);
+
+  /* líneas de grid vertical */
+  ctx.strokeStyle = cl.gridLine; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+  [1, 2].forEach(i => {
+    const lx = mainX + cw3 * i + 4 * i - 2;
+    ctx.beginPath(); ctx.moveTo(lx, 56); ctx.lineTo(lx, 183); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  drawFooter(ctx, 10, 285, W - 20, cl);
+
+  /* leyenda */
+  ctx.fillStyle = cl.textSoft; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('grid-template-columns: 200px 1fr', W/2, 316);
+  ctx.fillText('"header header" / "sidebar contenido" / "footer footer"', W/2, 329);
+  ctx.fillStyle = cl.accent; ctx.font = '7px monospace';
+  ctx.fillText('min-width: 1024px', W/2, 345);
+}
+
+function renderAll() {
+  dibujarMovil('cv-movil');
+  dibujarTablet('cv-tablet');
+  dibujarDesktop('cv-desktop');
+}
+
+renderAll();
+const obs = new MutationObserver(renderAll);
+obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', renderAll);
+</script>
+</body>
+</html>
+
+</body></html>
