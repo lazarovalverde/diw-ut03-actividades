@@ -1,0 +1,690 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>YUKIRO · P5C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700&display=swap">
+<style>
+/* ── tokens ─────────────────────────────────────────── */
+:root {
+  --bg:       #f7f8fa;
+  --bg-card:  #ffffff;
+  --fg:       #1a1d2e;
+  --fg-soft:  #5a6070;
+  --fg-muted: #9099aa;
+  --accent:   #c47f00;
+  --acc-bg:   #fdf3dc;
+  --acc-fg:   #7a4f00;
+  --border:   #e2e5ec;
+  --code-bg:  #1e2230;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#131620;--bg-card:#1c1f2e;--fg:#e8ebf4;--fg-soft:#9099aa;
+    --fg-muted:#5a6070;--accent:#f0ab28;--acc-bg:#2a2000;--acc-fg:#f0ab28;
+    --border:#2a2d3e;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#131620;--bg-card:#1c1f2e;--fg:#e8ebf4;--fg-soft:#9099aa;
+  --fg-muted:#5a6070;--accent:#f0ab28;--acc-bg:#2a2000;--acc-fg:#f0ab28;
+  --border:#2a2d3e;color-scheme:dark;
+}
+
+*,*::before,*::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  background: var(--bg);
+  color: var(--fg);
+  padding-left:  max(16px, env(safe-area-inset-left,  0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 80px;
+}
+.inner { max-width: 820px; margin: 0 auto; padding-top: 48px; }
+
+/* cabecera */
+.page-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid var(--border); }
+.unit-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 6px;
+}
+.page-header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 24px; font-weight: 700; margin: 0 0 6px;
+}
+.page-header p { margin: 0; color: var(--fg-soft); font-size: 14px; }
+
+/* secciones */
+.section { margin-bottom: 44px; }
+.section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 17px; font-weight: 700;
+  margin: 0 0 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.section-sub { color: var(--fg-soft); font-size: 14px; margin: 0 0 14px; }
+
+p { margin: 0 0 10px; color: var(--fg-soft); }
+p:last-child { margin-bottom: 0; }
+strong { color: var(--fg); font-weight: 600; }
+code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  background: var(--acc-bg); color: var(--acc-fg);
+  padding: 1px 6px; border-radius: 4px;
+}
+
+/* situación */
+.situacion {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;
+}
+.situacion p { margin: 0; }
+
+/* teoría */
+.teoria { margin-bottom: 24px; }
+.teoria h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin: 0 0 10px;
+}
+.teoria-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 600px) { .teoria-grid { grid-template-columns: 1fr; } }
+.teoria-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+}
+.teoria-card .tc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
+}
+.teoria-card p { font-size: 13px; margin: 0; }
+
+/* nuevo badge */
+.badge-nuevo {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: var(--accent); color: #fff;
+  padding: 2px 7px; border-radius: 20px;
+  vertical-align: middle; margin-left: 6px;
+}
+
+/* mockups */
+.mockup-row { display: grid; gap: 10px; margin: 14px 0; }
+.mockup-row-3 { grid-template-columns: repeat(3, 1fr); }
+.mockup-row-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 600px) {
+  .mockup-row-3, .mockup-row-2 { grid-template-columns: 1fr; }
+}
+.mockup-wrap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.mockup-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: 7px 10px 5px; border-bottom: 1px solid var(--border);
+}
+canvas { display: block; width: 100%; }
+
+/* código */
+.code-wrap {
+  background: var(--code-bg); border-radius: 8px; overflow: hidden;
+  margin: 16px 0; border: 1px solid rgba(255,255,255,.06);
+}
+.code-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7a8099;
+  padding: 7px 14px 5px; border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: 8px;
+}
+.file-tag {
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  padding: 1px 6px; font-size: 10px;
+}
+.code-wrap pre {
+  margin: 0; padding: 12px 14px 14px; overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  line-height: 1.65; color: #c8d0e8;
+}
+.k  { color: #e07aff; }
+.v  { color: #79d4a5; }
+.n  { color: #7ab8ff; }
+.s  { color: #f0c070; }
+.c  { color: #5a6688; font-style: italic; }
+.p  { color: #e8d090; }
+
+/* tareas */
+.tareas { display: grid; gap: 10px; margin: 16px 0; }
+.tarea {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  display: grid; grid-template-columns: auto 1fr; gap: 0 14px;
+}
+.tarea-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px; font-weight: 700;
+  color: var(--border); line-height: 1;
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.tarea-titulo { font-weight: 600; color: var(--fg); margin-bottom: 4px; font-size: 14px; }
+.tarea p { font-size: 13px; margin: 0; }
+
+/* evaluación */
+.eval {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px; margin-top: 20px;
+}
+.eval-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 10px;
+}
+.eval-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.eval-table td {
+  padding: 6px 8px 6px 0; border-bottom: 1px solid var(--border);
+  color: var(--fg-soft); vertical-align: top;
+}
+.eval-table td:first-child {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fg);
+  white-space: nowrap;
+}
+.eval-table tr:last-child td { border-bottom: none; }
+.pts { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.eval-total td { border-top: 2px solid var(--border); padding-top: 10px; font-weight: 600; color: var(--fg); }
+
+/* recursos */
+.recursos-grid { display: grid; gap: 10px; }
+.recurso-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color .15s;
+}
+.recurso-card:hover { border-color: var(--accent); }
+.recurso-icon {
+  font-size: 20px; flex-shrink: 0;
+  width: 44px; height: 44px;
+  background: var(--acc-bg); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.recurso-titulo { font-weight: 600; font-size: 14px; color: var(--fg); margin-bottom: 2px; }
+.recurso-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent);
+}
+</style>
+
+<div class="inner">
+
+<!-- cabecera -->
+<header class="page-header">
+  <div class="unit-label">UT03 · P5C · DIW · 2.º DAW</div>
+  <h1>YUKIRO — Formulario de reserva responsive</h1>
+  <p>Formulario con <code>fieldset</code>, campos en grid de dos columnas en tablet/escritorio y pseudoclases de validación.</p>
+</header>
+
+<!-- ══ SITUACIÓN ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Situación</div>
+  <div class="situacion">
+    <p>YUKIRO necesita un formulario de reserva en su web. En móvil los campos se apilan en una columna. A partir de <strong>600 px</strong> algunos campos pasan a ocupar dos columnas en paralelo (nombre y apellidos, fechas de entrada y salida). Se usan <code>fieldset</code> para agrupar los datos personales y los datos de la estancia. El formulario responde al estado de validación sin JavaScript.</p>
+  </div>
+</div>
+
+<!-- ══ TEORÍA ════════════════════════════════════════ -->
+<div class="section teoria">
+  <div class="section-title">Lo que necesitas saber</div>
+  <div class="section-sub">Conceptos nuevos y repaso de esta práctica.</div>
+  <div class="teoria-grid">
+
+    <div class="teoria-card">
+      <div class="tc-label">fieldset / legend <span class="badge-nuevo">nuevo</span></div>
+      <p><code>fieldset</code> agrupa campos relacionados y dibuja un borde alrededor. <code>legend</code> es su título. Se pueden quitar los estilos por defecto del navegador y rediseñarlos desde cero.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">grid en formularios <span class="badge-nuevo">nuevo</span></div>
+      <p>Un <code>fieldset</code> puede actuar como grid. Con <code>grid-template-columns: 1fr 1fr</code> los campos se colocan en dos columnas. <code>grid-column: 1 / -1</code> hace que un campo ocupe toda la anchura.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">:focus-visible <span class="badge-nuevo">nuevo</span></div>
+      <p>Solo activa el estilo cuando el foco llega por teclado (Tab), no por clic. Mejor que <code>:focus</code> para no molestar al usuario de ratón. Se usa para dibujar un contorno de accesibilidad.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">:user-invalid <span class="badge-nuevo">nuevo</span></div>
+      <p>Se activa cuando el usuario ha interactuado con el campo y el valor no cumple la validación HTML (<code>required</code>, <code>type="email"</code>…). No se activa al cargar la página, solo tras tocar el campo.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">::placeholder</div>
+      <p>Selector de pseudoelemento para estilizar el texto de ayuda dentro de los <code>input</code> y <code>textarea</code>. Se suele poner en gris claro e itálica para diferenciarlo del texto real del usuario.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">grid-column: 1 / -1</div>
+      <p>Dentro de un grid, hace que el elemento ocupe desde la primera hasta la última línea de columna, independientemente del número total de columnas. Muy útil para botones y campos de comentario.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MOCKUPS ════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Mockups del formulario</div>
+  <div class="section-sub">En móvil, una columna. A partir de 600 px, los pares de campos van en dos columnas.</div>
+
+  <div class="mockup-row mockup-row-3">
+    <div class="mockup-wrap">
+      <div class="mockup-label">📱 &lt; 600 px</div>
+      <canvas id="cv-form-m" width="260" height="460"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">📟 ≥ 600 px</div>
+      <canvas id="cv-form-t" width="260" height="380"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">🔍 :user-invalid</div>
+      <canvas id="cv-form-err" width="260" height="160"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HTML DADO ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">HTML que recibes</div>
+  <div class="section-sub">No puedes modificarlo. Tu trabajo es escribir todo el CSS.</div>
+
+  <div class="code-wrap">
+    <div class="code-label"><span class="file-tag">HTML</span> formulario de reserva</div>
+    <pre><span class="k">&lt;section</span> <span class="n">class</span>=<span class="s">"reserva-seccion"</span><span class="k">&gt;</span>
+  <span class="k">&lt;h2</span> <span class="n">class</span>=<span class="s">"reserva-titulo"</span><span class="k">&gt;</span>Reserva tu estancia<span class="k">&lt;/h2&gt;</span>
+
+  <span class="k">&lt;form</span> <span class="n">class</span>=<span class="s">"reserva-form"</span> <span class="n">novalidate</span><span class="k">&gt;</span>
+
+    <span class="c">&lt;!-- Grupo 1: datos personales --&gt;</span>
+    <span class="k">&lt;fieldset</span> <span class="n">class</span>=<span class="s">"form-grupo"</span><span class="k">&gt;</span>
+      <span class="k">&lt;legend</span> <span class="n">class</span>=<span class="s">"form-legend"</span><span class="k">&gt;</span>Datos personales<span class="k">&lt;/legend&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"nombre"</span><span class="k">&gt;</span>Nombre<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"text"</span> <span class="n">id</span>=<span class="s">"nombre"</span> <span class="n">name</span>=<span class="s">"nombre"</span>
+               <span class="n">placeholder</span>=<span class="s">"Tu nombre"</span> <span class="n">required</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"apellidos"</span><span class="k">&gt;</span>Apellidos<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"text"</span> <span class="n">id</span>=<span class="s">"apellidos"</span> <span class="n">name</span>=<span class="s">"apellidos"</span>
+               <span class="n">placeholder</span>=<span class="s">"Tus apellidos"</span> <span class="n">required</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo form-campo--ancho"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"email"</span><span class="k">&gt;</span>Correo electrónico<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"email"</span> <span class="n">id</span>=<span class="s">"email"</span> <span class="n">name</span>=<span class="s">"email"</span>
+               <span class="n">placeholder</span>=<span class="s">"tu@email.com"</span> <span class="n">required</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo form-campo--ancho"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"telefono"</span><span class="k">&gt;</span>Teléfono<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"tel"</span> <span class="n">id</span>=<span class="s">"telefono"</span> <span class="n">name</span>=<span class="s">"telefono"</span>
+               <span class="n">placeholder</span>=<span class="s">"+34 600 000 000"</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;/fieldset&gt;</span>
+
+    <span class="c">&lt;!-- Grupo 2: datos de la estancia --&gt;</span>
+    <span class="k">&lt;fieldset</span> <span class="n">class</span>=<span class="s">"form-grupo"</span><span class="k">&gt;</span>
+      <span class="k">&lt;legend</span> <span class="n">class</span>=<span class="s">"form-legend"</span><span class="k">&gt;</span>Datos de la estancia<span class="k">&lt;/legend&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"entrada"</span><span class="k">&gt;</span>Fecha de entrada<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"date"</span> <span class="n">id</span>=<span class="s">"entrada"</span> <span class="n">name</span>=<span class="s">"entrada"</span> <span class="n">required</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"salida"</span><span class="k">&gt;</span>Fecha de salida<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;input</span> <span class="n">type</span>=<span class="s">"date"</span> <span class="n">id</span>=<span class="s">"salida"</span> <span class="n">name</span>=<span class="s">"salida"</span> <span class="n">required</span><span class="k">&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo form-campo--ancho"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"suite"</span><span class="k">&gt;</span>Suite preferida<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;select</span> <span class="n">id</span>=<span class="s">"suite"</span> <span class="n">name</span>=<span class="s">"suite"</span><span class="k">&gt;</span>
+          <span class="k">&lt;option</span> <span class="n">value</span>=<span class="s">""</span><span class="k">&gt;</span>-- Elige una suite --<span class="k">&lt;/option&gt;</span>
+          <span class="k">&lt;option</span><span class="k">&gt;</span>Suite Sakura<span class="k">&lt;/option&gt;</span>
+          <span class="k">&lt;option</span><span class="k">&gt;</span>Suite Tsuki<span class="k">&lt;/option&gt;</span>
+          <span class="k">&lt;option</span><span class="k">&gt;</span>Suite Hana<span class="k">&lt;/option&gt;</span>
+          <span class="k">&lt;option</span><span class="k">&gt;</span>Suite Kawa<span class="k">&lt;/option&gt;</span>
+        <span class="k">&lt;/select&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"form-campo form-campo--ancho"</span><span class="k">&gt;</span>
+        <span class="k">&lt;label</span> <span class="n">for</span>=<span class="s">"comentarios"</span><span class="k">&gt;</span>Comentarios<span class="k">&lt;/label&gt;</span>
+        <span class="k">&lt;textarea</span> <span class="n">id</span>=<span class="s">"comentarios"</span> <span class="n">name</span>=<span class="s">"comentarios"</span>
+                  <span class="n">rows</span>=<span class="s">"3"</span>
+                  <span class="n">placeholder</span>=<span class="s">"Peticiones especiales, alergias alimentarias…"</span><span class="k">&gt;&lt;/textarea&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;/fieldset&gt;</span>
+
+    <span class="k">&lt;button</span> <span class="n">type</span>=<span class="s">"submit"</span> <span class="n">class</span>=<span class="s">"reserva-btn"</span><span class="k">&gt;</span>Solicitar reserva<span class="k">&lt;/button&gt;</span>
+
+  <span class="k">&lt;/form&gt;</span>
+<span class="k">&lt;/section&gt;</span></pre>
+  </div>
+</div>
+
+<!-- ══ TAREAS ════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Lo que tienes que hacer</div>
+
+  <div class="tareas">
+
+    <div class="tarea">
+      <div class="tarea-num">01</div>
+      <div>
+        <div class="tarea-titulo">Estructura general y fieldset</div>
+        <p>La sección <code>.reserva-seccion</code> tiene un máximo de <strong>720 px</strong> y está centrada. Elimina los estilos por defecto del <code>fieldset</code> (borde, padding y margin del navegador). Estiliza <code>.form-legend</code> como una etiqueta destacada: texto en mayúsculas, pequeño, con color de acento, separada del primer campo con un margen inferior.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">02</div>
+      <div>
+        <div class="tarea-titulo">Grid de dos columnas en tablet y escritorio</div>
+        <p>El <code>.form-grupo</code> es un grid de <strong>una columna</strong> en móvil. A partir de <strong>600 px</strong>, pasa a <code>grid-template-columns: 1fr 1fr</code>. Los elementos con clase <code>.form-campo--ancho</code> deben ocupar siempre las dos columnas con <code>grid-column: 1 / -1</code>.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">03</div>
+      <div>
+        <div class="tarea-titulo">Estilo de campos y label</div>
+        <p>El <code>label</code> se muestra en bloque encima del campo. Los <code>input</code>, <code>select</code> y <code>textarea</code> tienen <code>width: 100%</code>, borde fino, border-radius, padding y heredan la fuente del documento (<code>font: inherit</code>). El <code>textarea</code> no debe poder redimensionarse horizontalmente (<code>resize: vertical</code>).</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">04</div>
+      <div>
+        <div class="tarea-titulo">Pseudoclases de validación y foco</div>
+        <p>Añade tres reglas CSS sin tocar el HTML:<br>
+        — <code>:focus-visible</code>: contorno de <strong>2 px</strong> sólido con el color de acento, offset de <strong>2 px</strong>.<br>
+        — <code>:user-invalid</code>: borde rojo (<code>#c0392b</code>) en el campo con error.<br>
+        — <code>::placeholder</code>: color gris claro (<code>#aaa</code>) y estilo itálico.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">05</div>
+      <div>
+        <div class="tarea-titulo">Botón de envío</div>
+        <p>El <code>.reserva-btn</code> ocupa todo el ancho del formulario, tiene fondo con el color de acento, texto blanco, border-radius generoso (8 px), padding vertical de 12 px y hereda la fuente. Al hacer <code>:hover</code> el fondo se oscurece ligeramente.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ EVALUACIÓN ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Evaluación</div>
+  <div class="eval">
+    <div class="eval-title">Criterios</div>
+    <table class="eval-table">
+      <tr>
+        <td>Estructura y fieldset</td>
+        <td>max-width centrado · fieldset sin estilos nativos · legend estilizado</td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Grid responsive</td>
+        <td>1 col en móvil · 2 col ≥ 600 px · <code>--ancho</code> siempre al 100 %</td>
+        <td class="pts">2.5</td>
+      </tr>
+      <tr>
+        <td>Campos y label</td>
+        <td>label en bloque · 100 % · borde + radius + padding · font:inherit · resize:vertical</td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Pseudoclases</td>
+        <td><code>:focus-visible</code> (2 px acento, offset 2 px) · <code>:user-invalid</code> (borde rojo) · <code>::placeholder</code> (gris itálica)</td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Botón</td>
+        <td>ancho completo · fondo acento · blanco · radius · hover oscuro</td>
+        <td class="pts">1.5</td>
+      </tr>
+      <tr class="eval-total">
+        <td>Total</td>
+        <td></td>
+        <td class="pts">10</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /inner -->
+
+<script>
+/* ── utilidades ────────────────────────────────────── */
+function gc() {
+  const dark = document.documentElement.dataset.theme === 'dark' ||
+    (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme:dark)').matches);
+  return {
+    bg:    dark ? '#131620' : '#f7f8fa',
+    card:  dark ? '#1c1f2e' : '#ffffff',
+    fg:    dark ? '#e8ebf4' : '#1a1d2e',
+    soft:  dark ? '#9099aa' : '#5a6070',
+    muted: dark ? '#5a6070' : '#aaaaaa',
+    brd:   dark ? '#2a2d3e' : '#e2e5ec',
+    acc:   dark ? '#f0ab28' : '#c47f00',
+    err:   '#c0392b',
+  };
+}
+function dpr() { return window.devicePixelRatio || 1; }
+function setup(id, w, h) {
+  const c = document.getElementById(id); if (!c) return null;
+  c.width = w * dpr(); c.height = h * dpr();
+  c.style.width = w + 'px'; c.style.height = h + 'px';
+  const ctx = c.getContext('2d'); ctx.scale(dpr(), dpr()); return ctx;
+}
+
+/* dibuja un campo con label */
+function drawField(ctx, x, y, w, label, c, opts = {}) {
+  const { error = false, value = '', placeholder = '' } = opts;
+  // label
+  ctx.fillStyle = c.fg;
+  ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(label, x, y + 8);
+  // input box
+  const iy = y + 13, ih = 20;
+  ctx.fillStyle = c.card;
+  ctx.strokeStyle = error ? c.err : c.brd;
+  ctx.lineWidth = error ? 1.5 : 1;
+  ctx.beginPath(); ctx.roundRect(x, iy, w, ih, 3); ctx.fill(); ctx.stroke();
+  if (value) {
+    ctx.fillStyle = c.fg; ctx.font = '8px sans-serif';
+    ctx.fillText(value, x + 6, iy + 13);
+  } else if (placeholder) {
+    ctx.fillStyle = c.muted; ctx.font = 'italic 7.5px sans-serif';
+    ctx.fillText(placeholder, x + 6, iy + 13);
+  }
+  if (error) {
+    ctx.fillStyle = c.err; ctx.font = '7px sans-serif';
+    ctx.fillText('Campo obligatorio', x, iy + ih + 9);
+  }
+  return ih + (error ? 20 : 15);
+}
+
+function drawLegend(ctx, x, y, text, c) {
+  ctx.fillStyle = c.acc;
+  ctx.font = 'bold 7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText(text.toUpperCase(), x, y);
+  // línea bajo legend
+  ctx.strokeStyle = c.brd; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + 220, y + 4); ctx.stroke();
+}
+
+function drawButton(ctx, x, y, w, c) {
+  ctx.fillStyle = c.acc;
+  ctx.beginPath(); ctx.roundRect(x, y, w, 22, 5); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Solicitar reserva', x + w / 2, y + 14);
+}
+
+/* ── móvil (1 columna) ─────────────────────────────── */
+function drawFormM() {
+  const W = 260, H = 460, c = gc();
+  const ctx = setup('cv-form-m', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 14, fw = W - pad * 2;
+  let y = 14;
+
+  // título
+  ctx.fillStyle = c.fg; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Reserva tu estancia', pad, y + 10); y += 22;
+
+  // fieldset 1
+  drawLegend(ctx, pad, y, 'Datos personales', c); y += 14;
+  y += drawField(ctx, pad, y, fw, 'Nombre', c, { placeholder: 'Tu nombre' });
+  y += drawField(ctx, pad, y, fw, 'Apellidos', c, { placeholder: 'Tus apellidos' });
+  y += drawField(ctx, pad, y, fw, 'Correo electrónico', c, { placeholder: 'tu@email.com' });
+  y += drawField(ctx, pad, y, fw, 'Teléfono', c, { placeholder: '+34 600 000 000' });
+  y += 6;
+
+  // fieldset 2
+  drawLegend(ctx, pad, y, 'Datos de la estancia', c); y += 14;
+  y += drawField(ctx, pad, y, fw, 'Fecha de entrada', c, {});
+  y += drawField(ctx, pad, y, fw, 'Fecha de salida', c, {});
+  y += drawField(ctx, pad, y, fw, 'Suite preferida', c, { placeholder: '-- Elige una suite --' });
+  y += 10;
+
+  drawButton(ctx, pad, y, fw, c);
+
+  // anotación
+  ctx.fillStyle = c.muted; ctx.font = '7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText('1 columna (< 600 px)', pad, H - 8);
+}
+
+/* ── tablet/desktop (2 columnas) ───────────────────── */
+function drawFormT() {
+  const W = 260, H = 380, c = gc();
+  const ctx = setup('cv-form-t', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 14, gap = 8;
+  const half = (W - pad * 2 - gap) / 2;
+  let y = 14;
+
+  // título
+  ctx.fillStyle = c.fg; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Reserva tu estancia', pad, y + 10); y += 22;
+
+  // fieldset 1
+  drawLegend(ctx, pad, y, 'Datos personales', c); y += 14;
+
+  // fila 1: Nombre | Apellidos
+  const rh1 = 36;
+  drawField(ctx, pad,            y, half, 'Nombre',    c, { placeholder: 'Tu nombre' });
+  drawField(ctx, pad + half + gap, y, half, 'Apellidos', c, { placeholder: 'Tus apellidos' });
+  y += rh1;
+
+  // fila 2: Email (ancho completo)
+  const fw = W - pad * 2;
+  y += drawField(ctx, pad, y, fw, 'Correo electrónico', c, { placeholder: 'tu@email.com' });
+
+  // fila 3: Teléfono (ancho completo)
+  y += drawField(ctx, pad, y, fw, 'Teléfono', c, { placeholder: '+34 600 000 000' });
+  y += 6;
+
+  // fieldset 2
+  drawLegend(ctx, pad, y, 'Datos de la estancia', c); y += 14;
+
+  // fila: Entrada | Salida
+  drawField(ctx, pad,            y, half, 'Fecha entrada', c, {});
+  drawField(ctx, pad + half + gap, y, half, 'Fecha salida',  c, {});
+  y += rh1;
+
+  // Suite (ancho completo)
+  y += drawField(ctx, pad, y, fw, 'Suite preferida', c, { placeholder: '-- Elige una suite --' });
+  y += 10;
+
+  drawButton(ctx, pad, y, fw, c);
+
+  // anotación + líneas divisorias
+  ctx.strokeStyle = c.acc; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+  ctx.beginPath(); ctx.moveTo(pad + half + gap / 2, 36); ctx.lineTo(pad + half + gap / 2, 36 + rh1 * 2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = c.acc; ctx.font = 'bold 7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('1fr', pad + half / 2, 32);
+  ctx.fillText('1fr', pad + half + gap + half / 2, 32);
+  ctx.fillStyle = c.muted; ctx.font = '7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText('2 columnas (≥ 600 px)', pad, H - 8);
+}
+
+/* ── estado :user-invalid ───────────────────────────── */
+function drawFormErr() {
+  const W = 260, H = 160, c = gc();
+  const ctx = setup('cv-form-err', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 14, fw = W - pad * 2;
+  let y = 16;
+
+  // label estado
+  ctx.fillStyle = c.muted; ctx.font = '7px monospace'; ctx.textAlign = 'left';
+  ctx.fillText(':user-invalid en acción', pad, y); y += 14;
+
+  // campo email con error
+  drawField(ctx, pad, y, fw, 'Correo electrónico', c, {
+    error: true, value: 'texto-sin-arroba'
+  });
+  y += 55;
+
+  // campo con focus-visible
+  ctx.fillStyle = c.fg; ctx.font = 'bold 8px sans-serif';
+  ctx.fillText('Nombre', pad, y + 8);
+  const iy = y + 13;
+  ctx.fillStyle = c.card; ctx.strokeStyle = c.acc; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect(pad, iy, fw, 20, 3); ctx.fill(); ctx.stroke();
+  // outline simulado
+  ctx.strokeStyle = c.acc; ctx.lineWidth = 1; ctx.setLineDash([]);
+  ctx.globalAlpha = 0.3;
+  ctx.beginPath(); ctx.roundRect(pad - 3, iy - 3, fw + 6, 26, 5); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = c.muted; ctx.font = '7px monospace'; ctx.textAlign = 'right';
+  ctx.fillText(':focus-visible (outline acento)', W - pad, iy + 32);
+}
+
+function renderAll() {
+  drawFormM();
+  drawFormT();
+  drawFormErr();
+}
+renderAll();
+const obs = new MutationObserver(renderAll);
+obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', renderAll);
+</script>
