@@ -1,0 +1,781 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>YUKIRO · P4C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700&display=swap">
+<style>
+/* ── tokens ─────────────────────────────────────────── */
+:root {
+  --bg:       #f7f8fa;
+  --bg-card:  #ffffff;
+  --fg:       #1a1d2e;
+  --fg-soft:  #5a6070;
+  --fg-muted: #9099aa;
+  --accent:   #c47f00;
+  --acc-bg:   #fdf3dc;
+  --acc-fg:   #7a4f00;
+  --border:   #e2e5ec;
+  --code-bg:  #1e2230;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#131620;--bg-card:#1c1f2e;--fg:#e8ebf4;--fg-soft:#9099aa;
+    --fg-muted:#5a6070;--accent:#f0ab28;--acc-bg:#2a2000;--acc-fg:#f0ab28;
+    --border:#2a2d3e;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#131620;--bg-card:#1c1f2e;--fg:#e8ebf4;--fg-soft:#9099aa;
+  --fg-muted:#5a6070;--accent:#f0ab28;--acc-bg:#2a2000;--acc-fg:#f0ab28;
+  --border:#2a2d3e;color-scheme:dark;
+}
+
+*,*::before,*::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  background: var(--bg);
+  color: var(--fg);
+  padding-left:  max(16px, env(safe-area-inset-left,  0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 80px;
+}
+.inner { max-width: 820px; margin: 0 auto; padding-top: 48px; }
+
+/* cabecera */
+.page-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid var(--border); }
+.unit-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 6px;
+}
+.page-header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 24px; font-weight: 700; margin: 0 0 6px;
+}
+.page-header p { margin: 0; color: var(--fg-soft); font-size: 14px; }
+
+/* secciones */
+.section { margin-bottom: 44px; }
+.section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 17px; font-weight: 700;
+  margin: 0 0 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.section-sub { color: var(--fg-soft); font-size: 14px; margin: 0 0 14px; }
+
+p { margin: 0 0 10px; color: var(--fg-soft); }
+p:last-child { margin-bottom: 0; }
+strong { color: var(--fg); font-weight: 600; }
+code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  background: var(--acc-bg); color: var(--acc-fg);
+  padding: 1px 6px; border-radius: 4px;
+}
+
+/* situación */
+.situacion {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;
+}
+.situacion p { margin: 0; }
+
+/* teoría */
+.teoria { margin-bottom: 24px; }
+.teoria h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin: 0 0 10px;
+}
+.teoria-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 600px) { .teoria-grid { grid-template-columns: 1fr; } }
+.teoria-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+}
+.teoria-card .tc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
+}
+.teoria-card p { font-size: 13px; margin: 0; }
+
+/* nuevo badge */
+.badge-nuevo {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: var(--accent); color: #fff;
+  padding: 2px 7px; border-radius: 20px;
+  vertical-align: middle; margin-left: 6px;
+}
+
+/* mockups */
+.mockup-row { display: grid; gap: 10px; margin: 14px 0; }
+.mockup-row-3 { grid-template-columns: repeat(3, 1fr); }
+.mockup-row-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 600px) {
+  .mockup-row-3, .mockup-row-2 { grid-template-columns: 1fr; }
+}
+.mockup-wrap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.mockup-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: 7px 10px 5px; border-bottom: 1px solid var(--border);
+}
+canvas { display: block; width: 100%; }
+
+/* código */
+.code-wrap {
+  background: var(--code-bg); border-radius: 8px; overflow: hidden;
+  margin: 16px 0; border: 1px solid rgba(255,255,255,.06);
+}
+.code-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7a8099;
+  padding: 7px 14px 5px; border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: 8px;
+}
+.file-tag {
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  padding: 1px 6px; font-size: 10px;
+}
+.code-wrap pre {
+  margin: 0; padding: 12px 14px 14px; overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  line-height: 1.65; color: #c8d0e8;
+}
+.k  { color: #e07aff; }
+.v  { color: #79d4a5; }
+.n  { color: #7ab8ff; }
+.s  { color: #f0c070; }
+.c  { color: #5a6688; font-style: italic; }
+.p  { color: #e8d090; }
+
+/* tareas */
+.tareas { display: grid; gap: 10px; margin: 16px 0; }
+.tarea {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  display: grid; grid-template-columns: auto 1fr; gap: 0 14px;
+}
+.tarea-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px; font-weight: 700;
+  color: var(--border); line-height: 1;
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.tarea-titulo { font-weight: 600; color: var(--fg); margin-bottom: 4px; font-size: 14px; }
+.tarea p { font-size: 13px; margin: 0; }
+
+/* evaluación */
+.eval {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px; margin-top: 20px;
+}
+.eval-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 10px;
+}
+.eval-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.eval-table td {
+  padding: 6px 8px 6px 0; border-bottom: 1px solid var(--border);
+  color: var(--fg-soft); vertical-align: top;
+}
+.eval-table td:first-child {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fg);
+  white-space: nowrap;
+}
+.eval-table tr:last-child td { border-bottom: none; }
+.pts { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.eval-total td { border-top: 2px solid var(--border); padding-top: 10px; font-weight: 600; color: var(--fg); }
+
+hr.div { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+/* recursos */
+.recursos-grid { display: grid; gap: 10px; }
+.recurso-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color .15s;
+}
+.recurso-card:hover { border-color: var(--accent); }
+.recurso-icon {
+  font-size: 24px; flex-shrink: 0;
+  width: 44px; height: 44px;
+  background: var(--acc-bg); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.recurso-titulo { font-weight: 600; font-size: 14px; color: var(--fg); margin-bottom: 2px; }
+.recurso-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent);
+}
+
+/* preview fotos reales */
+.preview-fotos {
+  margin: 20px 0 0;
+}
+.preview-fotos h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); margin: 0 0 10px;
+}
+.preview-hab {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) { .preview-hab { grid-template-columns: 1fr; } }
+.preview-hab-dest {
+  position: relative; overflow: hidden; border-radius: 6px;
+  min-height: 200px;
+}
+.preview-hab-dest img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+.preview-hab-dest .prev-label {
+  position: absolute; bottom: 10px; left: 10px;
+  background: rgba(0,0,0,.6); color: #fff;
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 3px;
+  z-index: 1;
+}
+.preview-hab-cards { display: grid; gap: 8px; grid-template-rows: repeat(3, 1fr); }
+.preview-hab-card { overflow: hidden; border-radius: 6px; min-height: 60px; }
+.preview-hab-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.preview-gal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+}
+.preview-gal-foto { height: 80px; overflow: hidden; border-radius: 4px; }
+.preview-gal-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+</style>
+
+<div class="inner">
+
+<!-- cabecera -->
+<header class="page-header">
+  <div class="unit-label">UT03 · P4C · DIW · 2.º DAW</div>
+  <h1>YUKIRO — Grid avanzado</h1>
+  <p>Sección de habitaciones con layout asimétrico por áreas y galería de fotos con grid intrínseco.</p>
+</header>
+
+<!-- ══ SITUACIÓN ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Situación</div>
+  <div class="situacion">
+    <p>La web de YUKIRO necesita dos nuevas secciones: una <strong>página de habitaciones</strong> donde una foto destacada ocupa el lado izquierdo y las cards de las demás habitaciones se distribuyen a la derecha, y una <strong>galería de fotos</strong> del ryokan que se adapta sola al ancho disponible sin usar media queries. En móvil todo se apila en una columna.</p>
+  </div>
+</div>
+
+<!-- ══ TEORÍA ════════════════════════════════════════ -->
+<div class="section teoria">
+  <div class="section-title">Lo que necesitas saber</div>
+  <div class="section-sub">Conceptos nuevos de esta práctica.</div>
+  <div class="teoria-grid">
+
+    <div class="teoria-card">
+      <div class="tc-label">grid-template-areas</div>
+      <p>Permite nombrar zonas del grid con palabras. Cada fila es una cadena con los nombres de las celdas. Un punto <code>.</code> marca una celda vacía.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">grid-area</div>
+      <p>Asigna un elemento a una zona nombrada. El elemento ocupa exactamente el espacio de esa área, independientemente de cuántas filas o columnas tenga.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">auto-fit + minmax() <span class="badge-nuevo">nuevo</span></div>
+      <p><code>repeat(auto-fit, minmax(240px, 1fr))</code> crea tantas columnas como quepan de al menos 240px. Las columnas crecen para repartir el espacio sobrante. <strong>No necesita media queries.</strong></p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">place-items <span class="badge-nuevo">nuevo</span></div>
+      <p>Shorthand de <code>align-items</code> + <code>justify-items</code> en un grid. <code>place-items: center</code> centra cada hijo dentro de su celda en ambos ejes.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">grid implícito</div>
+      <p>Cuando hay más elementos de los definidos en el grid, el navegador crea filas automáticas. <code>grid-auto-rows</code> controla su altura.</p>
+    </div>
+
+    <div class="teoria-card">
+      <div class="tc-label">object-fit en galería</div>
+      <p>En una galería, todas las imágenes deben tener la misma altura aunque tengan proporciones distintas. Se consigue con <code>height</code> fija en el contenedor y <code>object-fit: cover</code> en la imagen.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ PREVIEW FOTOS REALES ══════════════════════════ -->
+<div class="section">
+  <div class="section-title">Resultado esperado — fotos reales</div>
+  <div class="section-sub">Así deben verse las secciones al abrir el archivo en el navegador.</div>
+
+  <div class="preview-fotos">
+    <h3>Habitaciones</h3>
+    <div class="preview-hab">
+      <div class="preview-hab-dest">
+        <img src="https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?w=900&h=600&fit=crop" alt="Suite Sakura">
+        <div class="prev-label">Suite Sakura</div>
+      </div>
+      <div class="preview-hab-cards">
+        <div class="preview-hab-card"><img src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?w=600&h=400&fit=crop" alt="Suite Tsuki"></div>
+        <div class="preview-hab-card"><img src="https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?w=600&h=400&fit=crop" alt="Suite Hana"></div>
+        <div class="preview-hab-card"><img src="https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?w=600&h=400&fit=crop" alt="Suite Kawa"></div>
+      </div>
+    </div>
+
+    <h3>Galería</h3>
+    <div class="preview-gal">
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=400&fit=crop" alt="Pagoda"></div>
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&fit=crop" alt="Faroles"></div>
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1480796927426-f609979314bd?w=400&fit=crop" alt="Calle japonesa"></div>
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=400&fit=crop" alt="Torii"></div>
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=400&fit=crop" alt="Kyoto"></div>
+      <div class="preview-gal-foto"><img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=400&fit=crop" alt="Cerezos"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MOCKUPS: HABITACIONES ════════════════════════ -->
+<div class="section">
+  <div class="section-title">Sección habitaciones — mockups</div>
+  <div class="section-sub">Layout asimétrico con <code>grid-template-areas</code>. En móvil, columna única.</div>
+
+  <div class="mockup-row mockup-row-3">
+    <div class="mockup-wrap">
+      <div class="mockup-label">📱 &lt; 768 px</div>
+      <canvas id="cv-hab-m" width="260" height="300"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">📟 768 – 1023 px</div>
+      <canvas id="cv-hab-t" width="260" height="220"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">🖥 ≥ 1024 px</div>
+      <canvas id="cv-hab-d" width="260" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MOCKUPS: GALERÍA ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Galería — mockups</div>
+  <div class="section-sub">Grid intrínseco con <code>auto-fit + minmax()</code>. Sin media queries.</div>
+
+  <div class="mockup-row mockup-row-3">
+    <div class="mockup-wrap">
+      <div class="mockup-label">📱 estrecho (~320 px)</div>
+      <canvas id="cv-gal-m" width="260" height="300"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">📟 medio (~600 px)</div>
+      <canvas id="cv-gal-t" width="260" height="200"></canvas>
+    </div>
+    <div class="mockup-wrap">
+      <div class="mockup-label">🖥 ancho (~1200 px)</div>
+      <canvas id="cv-gal-d" width="260" height="140"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RECURSOS ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Recursos útiles</div>
+  <div class="section-sub">Referencias visuales e interactivas para entender los conceptos.</div>
+
+  <div class="recursos-grid">
+    <a class="recurso-card" href="https://codepen.io/seyedi/pen/OJvNdKx" target="_blank" rel="noopener">
+      <div class="recurso-icon">🔲</div>
+      <div>
+        <div class="recurso-titulo">CSS Grid — demo interactiva</div>
+        <div class="recurso-url">codepen.io · seyedi/OJvNdKx</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ══ HTML DADO ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">HTML que recibes</div>
+  <div class="section-sub">No puedes modificarlo. Tu trabajo es escribir todo el CSS.</div>
+
+  <div class="code-wrap">
+    <div class="code-label"><span class="file-tag">HTML</span> sección habitaciones</div>
+    <pre><span class="k">&lt;section</span> <span class="n">class</span>=<span class="s">"hab-seccion"</span><span class="k">&gt;</span>
+  <span class="k">&lt;h2</span> <span class="n">class</span>=<span class="s">"hab-titulo"</span><span class="k">&gt;</span>Habitaciones<span class="k">&lt;/h2&gt;</span>
+
+  <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-grid"</span><span class="k">&gt;</span>
+
+    <span class="c">&lt;!-- Foto destacada grande --&gt;</span>
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-destacada"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?w=900&amp;h=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Suite Sakura"</span><span class="k">&gt;</span>
+      <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-etiqueta"</span><span class="k">&gt;</span>Suite Sakura<span class="k">&lt;/div&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="c">&lt;!-- Cards secundarias (grid implícito) --&gt;</span>
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-cards"</span><span class="k">&gt;</span>
+
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"hab-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?w=600&amp;h=400&amp;fit=crop"</span>
+             <span class="n">alt</span>=<span class="s">"Suite Tsuki"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-card-info"</span><span class="k">&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-nombre"</span><span class="k">&gt;</span>Suite Tsuki<span class="k">&lt;/p&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-precio"</span><span class="k">&gt;</span>195 € / noche<span class="k">&lt;/p&gt;</span>
+        <span class="k">&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"hab-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?w=600&amp;h=400&amp;fit=crop"</span>
+             <span class="n">alt</span>=<span class="s">"Suite Hana"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-card-info"</span><span class="k">&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-nombre"</span><span class="k">&gt;</span>Suite Hana<span class="k">&lt;/p&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-precio"</span><span class="k">&gt;</span>220 € / noche<span class="k">&lt;/p&gt;</span>
+        <span class="k">&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+
+      <span class="k">&lt;article</span> <span class="n">class</span>=<span class="s">"hab-card"</span><span class="k">&gt;</span>
+        <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?w=600&amp;h=400&amp;fit=crop"</span>
+             <span class="n">alt</span>=<span class="s">"Suite Kawa"</span><span class="k">&gt;</span>
+        <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"hab-card-info"</span><span class="k">&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-nombre"</span><span class="k">&gt;</span>Suite Kawa<span class="k">&lt;/p&gt;</span>
+          <span class="k">&lt;p</span> <span class="n">class</span>=<span class="s">"hab-card-precio"</span><span class="k">&gt;</span>310 € / noche<span class="k">&lt;/p&gt;</span>
+        <span class="k">&lt;/div&gt;</span>
+      <span class="k">&lt;/article&gt;</span>
+
+    <span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/section&gt;</span></pre>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label"><span class="file-tag">HTML</span> galería de fotos</div>
+    <pre><span class="k">&lt;section</span> <span class="n">class</span>=<span class="s">"galeria-seccion"</span><span class="k">&gt;</span>
+  <span class="k">&lt;h2</span> <span class="n">class</span>=<span class="s">"galeria-titulo"</span><span class="k">&gt;</span>Galería<span class="k">&lt;/h2&gt;</span>
+
+  <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-grid"</span><span class="k">&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Jardín japonés"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Baño hinoki"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Sala tatami"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Noche en Tokio"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Cerezos en flor"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="k">&lt;div</span> <span class="n">class</span>=<span class="s">"galeria-foto"</span><span class="k">&gt;</span>
+      <span class="k">&lt;img</span> <span class="n">src</span>=<span class="s">"https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=600&amp;fit=crop"</span>
+           <span class="n">alt</span>=<span class="s">"Templo y naturaleza"</span><span class="k">&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+  <span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/section&gt;</span></pre>
+  </div>
+</div>
+
+<!-- ══ TAREAS ════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Lo que tienes que hacer</div>
+
+  <div class="tareas">
+
+    <div class="tarea">
+      <div class="tarea-num">01</div>
+      <div>
+        <div class="tarea-titulo">Layout asimétrico con grid-template-areas</div>
+        <p>En <strong>escritorio (≥ 1024 px)</strong>, <code>.hab-grid</code> debe tener dos zonas: <code>destacada</code> a la izquierda ocupando 2 columnas de cada 3, y <code>cards</code> a la derecha ocupando 1. Usa <code>grid-template-areas</code> y asigna <code>grid-area</code> a cada hijo. En móvil, columna única apilada.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">02</div>
+      <div>
+        <div class="tarea-titulo">Imagen destacada que llena su área</div>
+        <p><code>.hab-destacada</code> debe tener <code>position: relative</code> para contener la etiqueta. La imagen debe cubrir toda la zona sin deformarse. La etiqueta <code>.hab-etiqueta</code> se posiciona en la esquina inferior izquierda con <code>position: absolute</code>.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">03</div>
+      <div>
+        <div class="tarea-titulo">Cards secundarias en grid implícito</div>
+        <p><code>.hab-cards</code> contiene las tres cards. Usa <code>display: grid</code> con <code>grid-auto-rows</code> para que todas las filas tengan la misma altura. Las cards deben mostrar imagen arriba y texto debajo usando <code>display: flex; flex-direction: column</code>.</p>
+      </div>
+    </div>
+
+    <div class="tarea">
+      <div class="tarea-num">04</div>
+      <div>
+        <div class="tarea-titulo">Galería con auto-fit + minmax()</div>
+        <p>El <code>.galeria-grid</code> debe crear automáticamente tantas columnas como quepan de al menos <strong>220 px</strong>. Todas las fotos tienen la misma altura (180 px). Sin ninguna media query. Comprueba que al estrechar el navegador las columnas se van apilando solas.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ EVALUACIÓN ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Evaluación</div>
+  <div class="eval">
+    <div class="eval-title">Criterios</div>
+    <table class="eval-table">
+      <tr>
+        <td>grid-template-areas correcto</td>
+        <td>Zonas bien definidas, <code>grid-area</code> asignado a cada hijo, proporción 2fr / 1fr</td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Imagen destacada</td>
+        <td><code>object-fit: cover</code> + alto al 100% + etiqueta con <code>position: absolute</code></td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Grid implícito en cards</td>
+        <td><code>grid-auto-rows</code> activo · cards en columna flex · precio al fondo</td>
+        <td class="pts">2</td>
+      </tr>
+      <tr>
+        <td>Galería auto-fit</td>
+        <td><code>repeat(auto-fit, minmax(220px, 1fr))</code> · altura fija · <code>object-fit: cover</code> · sin media query</td>
+        <td class="pts">2.5</td>
+      </tr>
+      <tr>
+        <td>Responsive general</td>
+        <td>Móvil: columna única en habitaciones · galería apilada sola · sin desbordamiento</td>
+        <td class="pts">1.5</td>
+      </tr>
+      <tr class="eval-total">
+        <td>Total</td>
+        <td></td>
+        <td class="pts">10</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /inner -->
+
+<script>
+/* ── utilidades ────────────────────────────────────── */
+function gc() {
+  const dark = document.documentElement.dataset.theme === 'dark' ||
+    (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme:dark)').matches);
+  return {
+    bg:    dark ? '#131620' : '#eef0f4',
+    card:  dark ? '#1c1f2e' : '#ffffff',
+    fg:    dark ? '#e8ebf4' : '#1a1d2e',
+    soft:  dark ? '#9099aa' : '#5a6070',
+    muted: dark ? '#5a6070' : '#aaaaaa',
+    brd:   dark ? '#2a2d3e' : '#e2e5ec',
+    acc:   dark ? '#f0ab28' : '#c47f00',
+    warm1: dark ? '#6a4820' : '#c8a870',
+    warm2: dark ? '#9a7040' : '#8a6030',
+    warm3: dark ? '#3a2810' : '#d4b88a',
+  };
+}
+function dpr() { return window.devicePixelRatio || 1; }
+function setup(id, w, h) {
+  const c = document.getElementById(id); if (!c) return null;
+  c.width = w * dpr(); c.height = h * dpr();
+  c.style.width = w + 'px'; c.style.height = h + 'px';
+  const ctx = c.getContext('2d'); ctx.scale(dpr(), dpr()); return ctx;
+}
+function ryokanImg(ctx, x, y, w, h, seed) {
+  const palettes = [
+    ['#c8a870','#8a6030'],['#9a7040','#4a2810'],['#b89060','#785028'],
+    ['#d4b88a','#9a7050'],['#c09870','#6a4830'],['#a88060','#5a3820']
+  ];
+  const [c1, c2] = palettes[seed % palettes.length];
+  const gi = ctx.createLinearGradient(x, y, x + w, y + h);
+  gi.addColorStop(0, c1); gi.addColorStop(1, c2);
+  ctx.fillStyle = gi; ctx.fillRect(x, y, w, h);
+  // linea shoji
+  ctx.globalAlpha = .15;
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
+  for (let i = 1; i < 3; i++) {
+    ctx.beginPath();
+    ctx.moveTo(x + w * i / 3, y);
+    ctx.lineTo(x + w * i / 3, y + h);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+function annoBox(ctx, x, y, text, c) {
+  const W = ctx.measureText(text).width + 16;
+  ctx.fillStyle = c.card; ctx.strokeStyle = c.brd; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x, y, W, 13, 3); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = c.muted;
+  ctx.font = '6.5px monospace'; ctx.textAlign = 'left';
+  ctx.fillText(text, x + 8, y + 9.5);
+}
+
+/* ── habitaciones móvil ────────────────────────────── */
+function drawHabM() {
+  const W = 260, H = 300, c = gc();
+  const ctx = setup('cv-hab-m', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 10;
+  // destacada
+  ryokanImg(ctx, pad, 10, W - pad*2, 110, 0);
+  // etiqueta sobre imagen
+  ctx.fillStyle = 'rgba(0,0,0,.55)';
+  ctx.beginPath(); ctx.roundRect(pad + 6, 95, 72, 16, 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Suite Sakura', pad + 12, 106);
+  // 3 cards apiladas
+  [0,1,2].forEach((i) => {
+    const y = 130 + i * 55;
+    ryokanImg(ctx, pad, y, 80, 46, i + 1);
+    ctx.fillStyle = c.card; ctx.strokeStyle = c.brd; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(pad + 80, y, W - pad*2 - 80, 46, 0); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = c.fg; ctx.font = 'bold 8px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(['Suite Tsuki','Suite Hana','Suite Kawa'][i], pad + 88, y + 16);
+    ctx.fillStyle = c.acc; ctx.font = '8px sans-serif';
+    ctx.fillText(['195 € / noche','220 € / noche','310 € / noche'][i], pad + 88, y + 30);
+  });
+  annoBox(ctx, 8, H - 18, 'columna única (base)', c);
+}
+
+/* ── habitaciones tablet ───────────────────────────── */
+function drawHabT() {
+  const W = 260, H = 220, c = gc();
+  const ctx = setup('cv-hab-t', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 8;
+  // dos columnas 1fr 1fr
+  const col = (W - pad*2 - 8) / 2;
+  ryokanImg(ctx, pad, 10, col, 180, 0);
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.beginPath(); ctx.roundRect(pad + 4, 164, 68, 14, 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 7px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Suite Sakura', pad + 8, 174);
+  // 3 cards a la derecha
+  const cx = pad + col + 8;
+  [0,1,2].forEach(i => {
+    const y = 10 + i * 60;
+    ryokanImg(ctx, cx, y, col, 50, i + 1);
+    ctx.fillStyle = c.fg; ctx.font = 'bold 7px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(['Tsuki','Hana','Kawa'][i], cx + 4, y + 42 + 10);
+  });
+  annoBox(ctx, 8, H - 16, 'dos columnas (≥ 768 px)', c);
+}
+
+/* ── habitaciones escritorio ───────────────────────── */
+function drawHabD() {
+  const W = 260, H = 220, c = gc();
+  const ctx = setup('cv-hab-d', W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 8;
+  // 2fr 1fr
+  const total = W - pad*2 - 8;
+  const col1 = total * 2/3, col2 = total * 1/3;
+  ryokanImg(ctx, pad, 10, col1, 180, 0);
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.beginPath(); ctx.roundRect(pad + 4, 164, 68, 14, 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 7px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Suite Sakura', pad + 8, 174);
+  const cx = pad + col1 + 8;
+  [0,1,2].forEach(i => {
+    const y = 10 + i * 60;
+    ryokanImg(ctx, cx, y, col2, 50, i + 1);
+    ctx.fillStyle = c.fg; ctx.font = 'bold 7px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(['Tsuki','Hana','Kawa'][i], cx + 4, y + 42 + 10);
+  });
+  // anotación grid-area
+  ctx.fillStyle = 'rgba(0,0,0,.0)';
+  ctx.strokeStyle = c.acc; ctx.lineWidth = 1.5; ctx.setLineDash([3,2]);
+  ctx.beginPath(); ctx.rect(pad, 10, col1, 180); ctx.stroke();
+  ctx.beginPath(); ctx.rect(cx, 10, col2, 180); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = c.acc; ctx.font = 'bold 7px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('destacada', pad + col1/2, 24);
+  ctx.fillText('cards', cx + col2/2, 24);
+  annoBox(ctx, 8, H - 16, 'grid-template-areas 2fr 1fr (≥ 1024 px)', c);
+}
+
+/* ── galería ───────────────────────────────────────── */
+function drawGal(id, W, H, cols) {
+  const c = gc();
+  const ctx = setup(id, W, H); if (!ctx) return;
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, W, H);
+  const pad = 8, gap = 4;
+  const cw = (W - pad*2 - gap*(cols-1)) / cols;
+  const ch = 70;
+  for (let i = 0; i < 6; i++) {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = pad + col*(cw+gap);
+    const y = 10 + row*(ch+gap);
+    ryokanImg(ctx, x, y, cw, ch, i);
+  }
+  const labels = {
+    'cv-gal-m': '1 col → apiladas solas',
+    'cv-gal-t': '2 col → minmax(220px,1fr)',
+    'cv-gal-d': '3 col → minmax(220px,1fr)',
+  };
+  annoBox(ctx, 8, H - 16, labels[id] || '', c);
+}
+
+function renderAll() {
+  drawHabM();
+  drawHabT();
+  drawHabD();
+  drawGal('cv-gal-m', 260, 300, 1);
+  drawGal('cv-gal-t', 260, 200, 2);
+  drawGal('cv-gal-d', 260, 140, 3);
+}
+renderAll();
+const obs = new MutationObserver(renderAll);
+obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', renderAll);
+</script>
